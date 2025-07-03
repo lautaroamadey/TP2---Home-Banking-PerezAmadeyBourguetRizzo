@@ -40,7 +40,7 @@ class CreditCard {
 
 
 
-clients[0].creditCards.push(new CreditCard("VISA",new Date("06/19/2025"), 111, "FRANCISCO PEREZ", 28, 5))
+clients[0].creditCards.push(new CreditCard("VISA",new Date("06/19/2025"), 333, "BAUTISTA RIZZO", 28, 5))
 clients[0].creditCards.push(new CreditCard("VISA",new Date("05/19/2025"), 111, "FRANCISCO PEREZ", 28, 5))
 
 clients[2].creditCards.push(new CreditCard("MASTERCARD", new Date("04/19/2025"), 444,"TOMAS BOURGUET", 28, 5))
