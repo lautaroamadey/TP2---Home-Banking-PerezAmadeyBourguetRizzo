@@ -84,8 +84,17 @@ function findCreditCardById(creditCardIds){
 
 //15 
 function findMovementsBySavingsBankId(savingsBanksId) {
-    let posSavingBank = findClient(savingsBanksId);
-    let savingBank = savingsBanks[posSavingBank];
-
-    return savingBank.movements
+    let posSavingBank
+    for (let i=0; clients.length; i++) {
+        cajasAhorro = findSavingBank(clients[i].id);
+        for (let j=0; j < cajasAhorro.length; j++) {
+            if (cajasAhorro[j].id == savingsBanksId) {
+                return cajasAhorro[j].movements
+            }
+        }
+    
+    }
+    return []
 }
+
+//16
