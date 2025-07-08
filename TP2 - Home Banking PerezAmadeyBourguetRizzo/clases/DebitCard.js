@@ -41,3 +41,4 @@ clients[2].savingsBanks[1].debitCards.push(new DebitCard("BBVA",444,"TOMAS BOURG
 clients[3].savingsBanks[0].debitCards.push(new DebitCard("VISA",777,"LAUTARO AMADEY"))
 clients[3].savingsBanks[1].debitCards.push(new DebitCard("MASTERCARD",777,"LAUTARO AMADEY"))
 clients[3].savingsBanks[1].debitCards.push(new DebitCard("BBVA",777,"LAUTARO AMADEY"))
+
