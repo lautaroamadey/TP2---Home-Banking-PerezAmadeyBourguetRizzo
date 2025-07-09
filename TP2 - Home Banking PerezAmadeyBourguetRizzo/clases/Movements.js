@@ -113,3 +113,41 @@ clients[3].savingsBanks[1].debitCards[0].consumptions.push(new Movement("Disney+
 clients[3].savingsBanks[1].debitCards[1].consumptions.push(new Movement("Steam", 60, 1));
 clients[3].savingsBanks[1].debitCards[1].consumptions.push(new Movement("Battle.net", 45));
 
+//--------------------------------------------------------
+
+// Consumptions para cliente 0 - Fran
+clients[0].creditCards[0].consumptions.push(new Movement("Amazon", 5000));
+clients[0].creditCards[0].consumptions.push(new Movement("Mercado Libre", 2500, 3));
+clients[0].creditCards[1].consumptions.push(new Movement("Spotify", 300));
+clients[0].creditCards[1].consumptions.push(new Movement("Netflix", 700, 2));
+
+// Consumptions para cliente 1 - Beto
+clients[1].creditCards[0].consumptions.push(new Movement("Apple Music", 400));
+clients[1].creditCards[0].consumptions.push(new Movement("Ebay", 1800, 4));
+clients[1].creditCards[1].consumptions.push(new Movement("Udemy", 1200));
+clients[1].creditCards[1].consumptions.push(new Movement("Steam", 900, 5));
+
+// Consumptions para cliente 2 - Tomás
+clients[2].creditCards[0].consumptions.push(new Movement("Apple Store", 1500));
+clients[2].creditCards[0].consumptions.push(new Movement("Google Play", 1200, 4));
+clients[2].creditCards[1].consumptions.push(new Movement("LinkedIn Premium", 1500));
+clients[2].creditCards[1].consumptions.push(new Movement("Dropbox", 700, 3));
+
+// Consumptions para cliente 3 - Lauti
+clients[3].creditCards[0].consumptions.push(new Movement("Disney+", 800));
+clients[3].creditCards[0].consumptions.push(new Movement("HBO Max", 650, 1));
+clients[3].creditCards[1].consumptions.push(new Movement("Netflix", 850));
+clients[3].creditCards[1].consumptions.push(new Movement("Amazon Prime", 1200, 3));
+
+//------------------------------------------------
+
+/*ejemplos de uso
+let hoy = new Date();
+
+clients[0].savingsBanks[0].registrarMovimiento("Transferencia", 30000, hoy); // Caja en ARS
+clients[0].savingsBanks[1].registrarMovimiento("Venta", 150, hoy); // Caja en USD
+
+clients[1].savingsBanks[0].debitCards[0].registrarMovimiento("YPF", -7000, hoy);
+
+clients[2].creditCards[0].registrarMovimiento("Garbarino", 50000, hoy, 6);
+*/

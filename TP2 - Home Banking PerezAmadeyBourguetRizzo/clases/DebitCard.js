@@ -23,6 +23,16 @@ class DebitCard {
 
         this.consumptions = [];
     }
+
+    registrarMovimiento(thirdPartyName, amount, date) {
+        if (!thirdPartyName || typeof amount !== "number" || !(date instanceof Date)) return false;
+        if (this.expireDate < new Date()) return false;
+
+        const movimiento = new Movement(thirdPartyName, amount);
+        movimiento.date = date;
+        this.consumptions.push(movimiento);
+        return true;
+    }
 }
 
 clients[0].savingsBanks[0].debitCards.push(new DebitCard("VISA",111,"FRANCISCO PEREZ"))
