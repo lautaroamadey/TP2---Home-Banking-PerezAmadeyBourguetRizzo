@@ -84,7 +84,7 @@ function findCreditCardById(creditCardIds){
 
 //15 
 function findMovementsBySavingsBankId(savingsBanksId) {
-    let posSavingBank
+    let cajasAhorro
     for (let i=0;i < clients.length; i++) {
         cajasAhorro = findSavingBank(clients[i].id);
         for (let j=0; j < cajasAhorro.length; j++) {
@@ -97,36 +97,22 @@ function findMovementsBySavingsBankId(savingsBanksId) {
     return []
 }
 
-//16 {}
-function findMovementsByDebitCardId(debitCardId) {
+//16 
+function findMovementsByDebitCardId(debitCardIds) {
+    let movementss = []
     for (let i = 0; i < clients.length; i++) {
         for (let j = 0; j < clients[i].savingsBanks.length; j++) {
             for (let k = 0; k < clients[i].savingsBanks[j].debitCards.length; k++) {
-                if (clients[i].savingsBanks[j].debitCards[k].id === debitCardId) {
-                    return clients[i].savingsBanks[j].debitCards[k].consumptions;
+                if (clients[i].savingsBanks[j].debitCards[k].debitCardIds === debitCardIds) {
+                    movementss.push(clients[i].savingsBanks[j].debitCards[k].consumptions)
+                    return movementss;
                 }
             }
         }
     }
     return [];
-}
+} 
 
-function findMovementsByDebitCardId(debitCardId) {
-    for (let i = 0; i < clients.length; i++) {
-        let cajasAhorro = findSavingBank(clients[i].id); // usamos función ya existente
-        for (let j = 0; j < cajasAhorro.length; j++) {
-            let tarjetas = cajasAhorro[j].debitCards;
-            for (let k = 0; k < tarjetas.length; k++) {
-                if (tarjetas[k].id === debitCardId) {
-                    return tarjetas[k].consumptions;
-                }
-            }
-        }
-    }
-    return [];
-}
-
-//revisar cual esta bien 
 
 //17
 function findMovementsByCreditCardId(creditCardId) {

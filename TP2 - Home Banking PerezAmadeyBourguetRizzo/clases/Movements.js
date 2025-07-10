@@ -139,15 +139,3 @@ clients[3].creditCards[0].consumptions.push(new Movement("HBO Max", 650, 1));
 clients[3].creditCards[1].consumptions.push(new Movement("Netflix", 850));
 clients[3].creditCards[1].consumptions.push(new Movement("Amazon Prime", 1200, 3));
 
-//------------------------------------------------
-
-/*ejemplos de uso
-let hoy = new Date();
-
-clients[0].savingsBanks[0].registrarMovimiento("Transferencia", 30000, hoy); // Caja en ARS
-clients[0].savingsBanks[1].registrarMovimiento("Venta", 150, hoy); // Caja en USD
-
-clients[1].savingsBanks[0].debitCards[0].registrarMovimiento("YPF", -7000, hoy);
-
-clients[2].creditCards[0].registrarMovimiento("Garbarino", 50000, hoy, 6);
-*/

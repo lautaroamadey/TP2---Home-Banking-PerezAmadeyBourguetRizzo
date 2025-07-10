@@ -1,15 +1,17 @@
 let clientsId = 1;
-const COTIZACION_DOLAR = 1100; // Ejemplo: 1 USD = 1100 ARS
 
 class Client {
-    constructor(nombre, email, password) {
-        this.id = clientId;
-        clientId++;
-        this.nombre = nombre;
-        this.email = email;
+    constructor(dni, password, name, lastName) {
+        this.id = clientsId;
+        clientsId++;
+        this.dni = dni;
         this.password = password;
-        this.savingsBanks = [];
+        this.name = name;
+        this.lastName = lastName;
         this.creditCards = [];
+        this.savingsBanks = [];
+        // Otra opción es crear la primer caja de ahorro acá directamente...
+        // this.savingsBanks = [new SavingsBanks("ARS", 50000, "FIRMA.TIPO.ALIAS")];
     }
 
     // Método de compra/venta de dólares
@@ -31,6 +33,8 @@ class Client {
         if (!cajaOrigen || !cajaDestino || monto <= 0) {
             return false;
         }
+
+        const COTIZACION_DOLAR = 1100; // Ejemplo: 1 USD = 1100 ARS
 
         // Determinar operación: venta o compra
         let exitoExtraccion = false;
@@ -66,18 +70,3 @@ class Client {
  clients.push(new Client (48680134, "bb", "Bautista", "Rizzo"))
  clients.push(new Client (48316998, "cc", "Tomas", "Bourguet"))
  clients.push(new Client (47477890, "dd", "Lautaro", "Amadey"))
-
-
-/*ejemplos de uso
-// Supongamos que clients[0] es Fran
-let fran = clients[0];
-
-let cajaARS = fran.savingsBanks[0].id;
-let cajaUSD = fran.savingsBanks[1].id;
-
-// Venta de 100 USD → pasa a ARS
-console.log(fran.convertirMoneda(100, cajaUSD, cajaARS)); // true
-
-// Compra de 110000 ARS → pasa a USD
-console.log(fran.convertirMoneda(110000, cajaARS, cajaUSD)); // true
-*/
