@@ -20,3 +20,4 @@ class SavingBank {
         this.cbu = cbu;
     }
     }
+
