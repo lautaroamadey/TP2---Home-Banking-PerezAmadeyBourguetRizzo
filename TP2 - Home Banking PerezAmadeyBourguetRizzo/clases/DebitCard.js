@@ -4,11 +4,11 @@ let cardNumbers = 1000000000000000;
 
 class DebitCard {
     constructor(provider, emitionDate, securityCode, displayedName){
-        this.debitCardIds = debitCardIds;
+        /*this.debitCardIds = debitCardIds;
         debitCardIds++
-        /*
+        */
         this.id = debitCardIds ;
-        debitCardIds++*/
+        debitCardIds++
         this.number = cardNumbers;
         cardNumbers++;
         this.provider = provider;

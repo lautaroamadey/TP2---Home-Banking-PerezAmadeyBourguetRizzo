@@ -26,7 +26,8 @@ console.log(tarjeta.registrarPago(150000));  // ❌ más que el saldo actual →
 
 
 // Tarjeta de débito
-clients[1].savingsBanks[0].debitCards[0].registrarMovimiento("McDonald's", -1200, "hoy"); // true
+clients[1].savingsBanks[0].debitCards[0].registrarMovimiento("McDonald's", -1200, hoy
+); // true
 
 
 //--------------------------------------------------------------------------------
@@ -92,5 +93,5 @@ console.log(cajaUSDD.ingresar(50));  // 🔸 balance = 150
 //======================
 // 🔹 REGISTRO DE MOVIMIENTOS EN CAJAS DE AHORRO
 //======================
-caja.registrarMovimiento("Transferencia", 30000, "hoy"); // ARS
-cajaUSDD.registrarMovimiento("Venta", 150, "hoy");        // USD
+caja.registrarMovimiento("Transferencia", 30000, hoy); // ARS
+cajaUSDD.registrarMovimiento("Venta", 150, hoy);        // USD
