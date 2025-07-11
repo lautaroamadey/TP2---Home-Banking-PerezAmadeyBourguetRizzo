@@ -103,7 +103,7 @@ function findMovementsByDebitCardId(debitCardIds) {
     for (let i = 0; i < clients.length; i++) {
         for (let j = 0; j < clients[i].savingsBanks.length; j++) {
             for (let k = 0; k < clients[i].savingsBanks[j].debitCards.length; k++) {
-                if (clients[i].savingsBanks[j].debitCards[k].debitCardIds === debitCardIds) {
+                if (clients[i].savingsBanks[j].debitCards[k].id === debitCardIds) {
                     movementss.push(clients[i].savingsBanks[j].debitCards[k].consumptions)
                     return movementss;
                 }
