@@ -11,10 +11,10 @@ class Client {
         this.creditCards = [];
         this.savingsBanks = [];
         // Otra opción es crear la primer caja de ahorro acá directamente...
-        // this.savingsBanks = [new SavingsBanks("ARS", 50000, "FIRMA.TIPO.ALIAS")];
+        // this.savingsBanks = [new SavingsBank("ARS", "AliasDefault", 50000)];
     }
 
-    // Método de compra/venta de dólares
+    // 20) Método para realizar compra/venta de dólares entre cajas de ahorro
     convertirMoneda(monto, idCajaOrigen, idCajaDestino) {
         let cajaOrigen = null;
         let cajaDestino = null;
@@ -36,29 +36,32 @@ class Client {
 
         const COTIZACION_DOLAR = 1100; // Ejemplo: 1 USD = 1100 ARS
 
-        // Determinar operación: venta o compra
+        // Variables para controlar el éxito de extracción e ingreso
         let exitoExtraccion = false;
         let exitoIngreso = false;
 
+        // Venta de dólares (extraer USD, ingresar ARS)
         if (cajaOrigen.currency === "USD" && cajaDestino.currency === "ARS") {
-            // Venta de dólares
             exitoExtraccion = cajaOrigen.extraer(monto);
             if (exitoExtraccion) {
-                let equivalente = monto * COTIZACION_DOLAR;
+                const equivalente = monto * COTIZACION_DOLAR;
                 exitoIngreso = cajaDestino.ingresar(equivalente);
             }
-        } else if (cajaOrigen.currency === "ARS" && cajaDestino.currency === "USD") {
-            // Compra de dólares
-            let equivalente = monto / COTIZACION_DOLAR;
+        }
+        // Compra de dólares (extraer ARS, ingresar USD)
+        else if (cajaOrigen.currency === "ARS" && cajaDestino.currency === "USD") {
             exitoExtraccion = cajaOrigen.extraer(monto);
             if (exitoExtraccion) {
+                const equivalente = monto / COTIZACION_DOLAR;
                 exitoIngreso = cajaDestino.ingresar(equivalente);
             }
-        } else {
-            // Las cajas deben ser de monedas diferentes
+        }
+        // Si las monedas son iguales o no reconocidas, operación inválida
+        else {
             return false;
         }
 
+        // Devuelve true si ambos procesos (extracción e ingreso) fueron exitosos
         return exitoExtraccion && exitoIngreso;
     }
 }
@@ -70,3 +73,8 @@ class Client {
  clients.push(new Client (48680134, "bb", "Bautista", "Rizzo"))
  clients.push(new Client (48316998, "cc", "Tomas", "Bourguet"))
  clients.push(new Client (47477890, "dd", "Lautaro", "Amadey"))
+
+
+
+
+

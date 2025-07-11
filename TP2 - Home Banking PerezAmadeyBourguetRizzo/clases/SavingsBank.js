@@ -21,7 +21,7 @@ class SavingsBank {
         cbuCounter++;
     }
 
-    // 18) Método para extraer dinero
+    //18 Método para extraer dinero
     extraer(monto) {
         if (monto <= 0) return false;
 
@@ -57,7 +57,7 @@ class SavingsBank {
         return false; // Moneda no válida
     }
 
-    // 19) Método para ingresar dinero
+    //19 Método para ingresar dinero
     ingresar(monto) {
         if (monto <= 0) return -1;
 
@@ -84,11 +84,11 @@ class SavingsBank {
         return -1; // Moneda no válida
     }
 
-    registrarMovimiento(tercero, monto, fecha){
-        this.movements.push(fecha, tercero, monto)
-        
-    
-} 
+    //21
+    registrarMovimiento(tercero, monto, fecha) {
+    this.movements.push({ fecha, tercero, monto });
+    return true; // Siempre devolver true si se guarda el movimiento
+    }
 }
 
 
@@ -104,3 +104,5 @@ clients[2].savingsBanks.push(new SavingsBank("USD","toto.usd"));
 
 clients[3].savingsBanks.push(new SavingsBank("ARS","lauti", 100000));
 clients[3].savingsBanks.push(new SavingsBank("USD","lauti.usd"));
+
+

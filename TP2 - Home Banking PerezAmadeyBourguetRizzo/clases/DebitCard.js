@@ -6,6 +6,9 @@ class DebitCard {
     constructor(provider, emitionDate, securityCode, displayedName){
         this.debitCardIds = debitCardIds;
         debitCardIds++
+        /*
+        this.id = debitCardIds ;
+        debitCardIds++*/
         this.number = cardNumbers;
         cardNumbers++;
         this.provider = provider;
@@ -15,10 +18,11 @@ class DebitCard {
         this.displayedName = displayedName;
         this.consumptions = [];   
     }
+    //21
     registrarMovimiento(tercero, monto, fecha){
         
         if(this.expireDate>fecha){
-            this.movements.push(fecha, tercero, monto)
+            this.consumptions.push(fecha, tercero, monto)
             return true
         }else{
             return false
