@@ -7,5 +7,6 @@ document.getElementById("dollar").style.display = "none";
 document.getElementById("creditCards").style.display = "none";
 document.getElementById("payments").style.display = "none";
 document.getElementById("investments").style.display = "none";
+/*
 document.getElementById("movements").style.display = "none";
-
+*/
