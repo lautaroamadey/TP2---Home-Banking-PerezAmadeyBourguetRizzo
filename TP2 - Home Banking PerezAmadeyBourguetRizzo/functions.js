@@ -1,3 +1,4 @@
+let idLogued = 0
 //9
 function findClient(clientsId) {
     for (let i = 0; i < clients.length; i++) {
@@ -206,15 +207,15 @@ function login() {
 
     idLogued = checklogin(dni, password);
     if (idLogued >= 1) {
-        document.getElementsByClassName("navbar-toggler")[0].style.display = "flex";
-        document.getElementById("offcanvasMenu").style.display = "flex";
-        document.getElementById("accounts").style.display = "flex";
-        document.getElementById("debitCards").style.display = "flex";
-        document.getElementById("transfers").style.display = "flex";
-        document.getElementById("dollar").style.display = "flex";
-        document.getElementById("creditCards").style.display = "flex";
-        document.getElementById("payments").style.display = "flex";
-        document.getElementById("investments").style.display = "flex";
+        document.getElementsByClassName("navbar-toggler")[0].style.display = "";
+        document.getElementById("offcanvasMenu").style.display = "";
+        document.getElementById("accounts").style.display = "";
+        document.getElementById("debitCards").style.display = "";
+        document.getElementById("transfers").style.display = "";
+        document.getElementById("dollar").style.display = "";
+        document.getElementById("creditCards").style.display = "";
+        document.getElementById("payments").style.display = "";
+        document.getElementById("investments").style.display = "";
         document.getElementsByClassName("col-md-6")[0].style.display = "none";
 
         console.log("Logueado exitosamente, el id del usuario es: " + idLogued);
@@ -224,4 +225,76 @@ function login() {
 }
 
 
+// 25
+function checkRegister(dni, password, name, surname) {
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].dni === dni) {
+            console.log("Utilizó un DNI que ya fue registrado");
+            alert("El DNI ya fue utilizado, no se ha podido registrar");
+            return false;
+        }
+    }
 
+    // Si el DNI no existe, se crea un nuevo cliente
+    clients.push(new Client(dni, password, name, surname));
+    return true;
+}
+
+
+function register() {
+    let arroba = -1;
+    let dni = document.getElementById("registerDni").value;
+    let name = document.getElementById("registerName").value;
+    let password = document.getElementById("registerPassword").value;
+    let correo = document.getElementById("registerEmail").value;
+    let surname = document.getElementById("registerLastName").value;
+
+    // Verifica si hay un "@" en el correo
+    for (let i = 0; i < correo.length; i++) {
+        if (correo[i] === "@") {
+            arroba = 1;
+        }
+    }
+
+    // Validaciones de campos
+    if (name === "") {
+        console.log("No rellenó el espacio del nombre");
+        alert("Debe completar con su nombre");
+        return false;
+    } else if (surname === "") {
+        console.log("No rellenó el espacio del apellido");
+        alert("Debe completar con su apellido");
+        return false;
+    } else if (dni === "") {
+        console.log("No rellenó el espacio del DNI");
+        alert("Debe completar con su DNI");
+        return false;
+    } else if (correo === "") {
+        console.log("No rellenó el espacio del correo");
+        alert("Debe completar con su correo");
+        return false;
+    } else if (password === "") {
+        console.log("No rellenó el espacio de la contraseña");
+        alert("Debe completar con su contraseña");
+        return false;
+    } else if (dni.length < 7) {
+        console.log("Fallo DNI");
+        alert("El DNI debe tener al menos 7 números");
+        return false;
+    } else if (arroba === -1) {
+        console.log("Fallo arroba");
+        alert("Tiene que ingresar un mail válido");
+        return false;
+    }
+
+    // Si todo está bien, intento registrar
+    let check = checkRegister(dni, password, name, surname);
+    if (check === true) {
+        console.log("Registrado exitosamente");
+        alert("Registrado exitosamente");
+    } else {
+        return false;
+    }
+
+    return true;
+}
