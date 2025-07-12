@@ -167,3 +167,61 @@ function realizarTransferencia(idCajaOrigen, destinoCaja, monto) {
     return resultadoIngreso !== -1;
 }
 
+// 24
+function checklogin(dni, password) {
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].dni == dni) {
+            if (clients[i].password == password) {
+                idLogued = clients[i].id;
+                return idLogued;
+            } else {
+                console.log("La contraseña es incorrecta");
+                alert("La contraseña es incorrecta");
+                return false;
+            }
+        }
+    }
+    console.log("DNI incorrecto");
+    alert("El DNI es incorrecto");
+    return false;
+}
+
+function login() {
+    let dni = document.getElementById("loginDni").value;
+    let password = document.getElementById("loginPassword").value;
+
+    if (dni == "") {
+        console.log("No relleno el espacio del DNI");
+        alert("Debe completar con su DNI");
+        return false;
+    } else if (dni.length < 7) {
+        console.log("Fallo DNI");
+        alert("El DNI debe tener al menos 7 números");
+        return false;
+    } else if (password == "") {
+        console.log("No relleno el espacio de la contraseña");
+        alert("Tiene que completar el campo de la contraseña");
+        return false;
+    }
+
+    idLogued = checklogin(dni, password);
+    if (idLogued >= 1) {
+        document.getElementsByClassName("navbar-toggler")[0].style.display = "flex";
+        document.getElementById("offcanvasMenu").style.display = "flex";
+        document.getElementById("accounts").style.display = "flex";
+        document.getElementById("debitCards").style.display = "flex";
+        document.getElementById("transfers").style.display = "flex";
+        document.getElementById("dollar").style.display = "flex";
+        document.getElementById("creditCards").style.display = "flex";
+        document.getElementById("payments").style.display = "flex";
+        document.getElementById("investments").style.display = "flex";
+        document.getElementsByClassName("col-md-6")[0].style.display = "none";
+
+        console.log("Logueado exitosamente, el id del usuario es: " + idLogued);
+    }
+
+    return true;
+}
+
+
+

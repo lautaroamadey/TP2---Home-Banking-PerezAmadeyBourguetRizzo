@@ -95,3 +95,12 @@ console.log(cajaUSDD.ingresar(50));  // 🔸 balance = 150
 //======================
 caja.registrarMovimiento("Transferencia", 30000, hoy); // ARS
 cajaUSDD.registrarMovimiento("Venta", 150, hoy);        // USD
+
+
+//--------------------------------------------------------------
+
+
+
+
+
+
