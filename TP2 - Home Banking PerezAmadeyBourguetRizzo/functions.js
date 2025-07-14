@@ -299,6 +299,22 @@ function register() {
     return true;
 }
 
-//aa sefsegsggses
-
-//26
+//27 /*
+/*function
+<div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Caja de Ahorro en Pesos</h5>
+                            <p class="card-text mb-1"><strong>Moneda:</strong> ARS</p>
+                            <p class="card-text mb-1"><strong>Saldo:</strong> $120.000</p>
+                            <p class="card-text mb-1"><strong>Descubierto disponible:</strong> $5.000</p>
+                            <p class="card-text mb-1"><strong>Descubierto usado:</strong> $2.000</p>
+                            <p class="card-text mb-1"><strong>Alias:</strong> mi.cuenta.pesos</p>
+                            <p class="card-text mb-3"><strong>CBU:</strong> 0123456789012345678901</p>
+                            <div class="d-grid">
+                                <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+*/
