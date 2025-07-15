@@ -225,7 +225,7 @@ function login() {
 }
 
 
-// 25
+//25
 function checkRegister(dni, password, name, surname) {
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].dni === dni) {
@@ -305,7 +305,7 @@ function llenarTarjetaSavingBank() {
 
     // Paso 1: Accedemos al cliente logueado restando 1 porque los arrays comienzan en 0
     // y tomamos su array de cajas de ahorro (savingsBanks)
-    let savings = clients[idLogued - 1].savingsBanks;
+    let savings = clients[findClient(idLogued)].savingsBanks;
 
     // Paso 2: Recorremos todas las cajas de ahorro del cliente
     for (let i = 0; i < savings.length; i++) {
@@ -326,5 +326,32 @@ function llenarTarjetaSavingBank() {
     }
 }
 
+function llenarCajaDolares() {
+
+    // Paso 1: Accedemos al cliente logueado (restamos 1 porque los arrays comienzan en 0)
+    // y tomamos su array de cajas de ahorro (savingsBanks)
+    let saving = clients[findClient(idLogued)].savingsBanks;
+
+    // Paso 2: Recorremos todas las cajas de ahorro del cliente
+    for (let i = 0; i < saving.length; i++) {
+
+        // Paso 3: Verificamos si la caja actual es en dólares (USD)
+        if (saving[i].currency === "USD") {
+
+            // Paso 4: Extraemos los datos importantes de esa caja en dólares
+            let id = saving[i].id;           // ID único de la caja
+            let balance = saving[i].balance; // Saldo disponible en dólares
+            let alias = saving[i].alias;     // Alias de la cuenta
+            let cbu = saving[i].cbu;         // CBU de 22 dígitos
+
+            // Paso 5: Llamamos a la función que crea visualmente la tarjeta en el HTML
+            crearCajaDolares(id, balance, alias, cbu);
+        }
+    }
+}
+
+function llenarTarjetasDebito() {
+    TarjetasDebito(id, currency, alias)
+}
 
 
