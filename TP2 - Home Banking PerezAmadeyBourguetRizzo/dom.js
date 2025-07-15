@@ -203,7 +203,7 @@ function VerMovimientos(id) {
     }
 
     // Mostrar el modal (si usás Bootstrap 5)
-    const modal = new bootstrap.Modal(document.getElementById('modal'));
+    let modal = new bootstrap.Modal(document.getElementById('modal'));
     modal.show();
 }
 
