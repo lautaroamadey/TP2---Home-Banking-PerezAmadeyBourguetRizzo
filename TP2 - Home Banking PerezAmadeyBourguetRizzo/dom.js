@@ -44,4 +44,24 @@ function logout() {
 }
 
 //{}
-
+//27
+function crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, cbu) {
+    document.getElementsByClassName("row")[0].innerHTML += `
+        <div id="cajaPesos${id}" class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Caja de Ahorro en Pesos</h5>
+                    <p class="card-text mb-1"><strong>Moneda:</strong> ARS</p>
+                    <p class="card-text mb-1"><strong>Saldo:</strong> $${balance}</p>
+                    <p class="card-text mb-1"><strong>Descubierto disponible:</strong> $${descubiertoDisponible}</p>
+                    <p class="card-text mb-1"><strong>Descubierto usado:</strong> $${descubierto}</p>
+                    <p class="card-text mb-1"><strong>Alias:</strong> ${alias}</p>
+                    <p class="card-text mb-3"><strong>CBU:</strong> ${cbu}</p>
+                    <div class="d-grid">
+                        <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
