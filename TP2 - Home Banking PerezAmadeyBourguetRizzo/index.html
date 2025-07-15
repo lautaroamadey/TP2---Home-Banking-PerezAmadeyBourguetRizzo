@@ -96,7 +96,7 @@
                                         placeholder="Contraseña" required>
                                     <label for="loginPassword">Contraseña</label>
                                 </div>
-                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank()" >Ingresar</button>
+                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank(), llenarCajaDolares()" >Ingresar</button>
                             </form>
                         </div>
 
@@ -141,25 +141,12 @@
         <section id="accounts" class="border rounded shadow-sm p-4 container my-5">
             <h2 class="mb-4">Mis Cuentas</h2>
 
-            <div class="row">
+            <div class="row" id="misCuentas">
                 <!-- Ejemplo de una card para caja de ahorro en pesos -->
 
 
                 <!-- Ejemplo de una card para caja de ahorro en dólares -->
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Caja de Ahorro en Dólares</h5>
-                            <p class="card-text mb-1"><strong>Moneda:</strong> USD</p>
-                            <p class="card-text mb-1"><strong>Saldo:</strong> U$D 200</p>
-                            <p class="card-text mb-1"><strong>Alias:</strong> mi.cuenta.dolares</p>
-                            <p class="card-text mb-3"><strong>CBU:</strong> 0987654321098765432109</p>
-                            <div class="d-grid">
-                                <button class="btn btn-outline-primary btn-sm" >Ver movimientos</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </section>
 
@@ -170,7 +157,7 @@
             <!-- Selector de tarjeta -->
             <div class="mb-3">
                 <label for="debitCardAccountSelect" class="form-label">Seleccionar caja de ahorro</label>
-                <select id="debitCardAccountSelect" class="form-select">
+                <select id="debitCardAccountSelect" class="form-select" onchange="llenarTarjetasDebito()">
                     <!-- Opciones a generar dinámicamente -->
                 </select>
             </div>
@@ -504,6 +491,7 @@
     <script src="clases/Movements.js"></script>
     <script src="functions.js"></script>
     <script src="dom.js"></script>
+    <script src="clases/pruebas.js"></script>
 
 </body>
 
