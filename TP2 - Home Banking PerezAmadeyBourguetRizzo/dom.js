@@ -1,4 +1,4 @@
-//Punto 24
+//24
 document.getElementsByClassName("navbar-toggler")[0].style.display = "none";
 document.getElementById("accounts").style.display = "none";
 document.getElementById("debitCards").style.display = "none";
@@ -7,9 +7,8 @@ document.getElementById("dollar").style.display = "none";
 document.getElementById("creditCards").style.display = "none";
 document.getElementById("payments").style.display = "none";
 document.getElementById("investments").style.display = "none";
-/*
 document.getElementById("movements").style.display = "none";
-*/
+
 
 //26
 function logout() {
@@ -45,7 +44,7 @@ function logout() {
 }
 
 //{}
-//27
+//27 a.
 function crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, cbu) {
     document.getElementById("misCuentas").innerHTML += `
         <div id="cajaPesos${id}" class="col-md-6 col-lg-4 mb-4">
@@ -86,9 +85,80 @@ function crearCajaDolares(id, balance, alias, cbu) {
     `;
 }
 
-function TarjetasDebito(id, currency, alias) {
-    let savingbanks = clients[findClient(idLogued)].savingsBanks;
-    for (let i = 0; i < savingbanks.length; i++) {
-        document.getElementById("debitCardAccountSelect").innerHTML += `<option value="${savingbanks[i].id}">Moneda: ${savingbanks[i].currency}, alias: ${savingbanks[i].alias}</option>`
-    }
+
+
+//27 b.
+function agregarCajaAlSelectDebito(id, currency, alias, cbu) {
+    // Accedemos al select del DOM
+    const select = document.getElementById("debitCardAccountSelect");
+
+    // Creamos dinámicamente una opción dentro del select, con la información visible al usuario
+    // El value corresponde al id de la caja (lo más útil para identificarla luego)
+    select.innerHTML += `
+        <option value="${id}">
+            Moneda: ${currency}, Alias: ${alias}, CBU: ${cbu}
+        </option>
+    `;
 }
+
+
+//27 c.
+function agregarCajaOrigen(id, currency, alias, cbu) {
+    document.getElementById("transferOrigin").innerHTML += `
+        <option value="${id}">Moneda: ${currency} | Alias: ${alias} | CBU: ${cbu}</option>
+    `;
+}
+
+function agregarCajaDestinatario(id, currency, alias, cbu, clienteNombre) {
+    document.getElementById("transferDestinysSelect").innerHTML += `
+        <option value="${id}">Cliente: ${clienteNombre} | Moneda: ${currency} | Alias: ${alias} | CBU: ${cbu}</option>
+    `;
+}
+
+//27 d.
+function cajaPesos(id, alias, cbu) {
+    document.getElementById("pesosAccount").innerHTML += `
+        <option value="${id}">
+            Alias: ${alias}, CBU: ${cbu}
+        </option>
+    `;
+}
+
+function cajaDolares(id, alias, cbu) {
+    document.getElementById("dollarsAccount").innerHTML += `
+        <option value="${id}">
+            Alias: ${alias}, CBU: ${cbu}
+        </option>
+    `;
+}
+
+//27 e. 
+function creditCardOption(id, provider, displayedName) {
+    document.getElementById("creditCardSelect").innerHTML += `
+        <option value="${id}">
+            ${provider} - ${displayedName}
+        </option>
+    `;
+}
+
+
+//27 f.
+function agregarTarjetaMetodoPago(id, tipo, provider, displayedName, securityCode) {
+    document.getElementById("paymentMethodSelect").innerHTML += `
+        <option value="${id}">
+            [${tipo}] ${provider} - ${displayedName} (Cod: ${securityCode})
+        </option>
+    `;
+}
+
+//27 g.
+function agregarCajaASelectInversion(id, currency, alias, cbu) {
+    document.getElementById("investmentAccountSelect").innerHTML += `
+        <option value="${id}">
+            [${currency}] Alias: ${alias}, CBU: ${cbu}
+        </option>
+    `;
+}
+
+//28
+function VerMovimientos() 

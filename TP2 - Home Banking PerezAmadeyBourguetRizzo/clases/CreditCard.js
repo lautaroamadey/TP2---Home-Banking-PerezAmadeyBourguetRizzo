@@ -80,8 +80,8 @@ class CreditCard {
 
 
 
-clients[0].creditCards.push(new CreditCard("VISA",new Date("05/19/2025"), 111, "FRANCISCO PEREZ", 28, 5))
-clients[0].creditCards.push(new CreditCard("MASTERCARD", new Date("07/19/2025"), 222, "FRANCISCO PEREZ", 28, 5));
+clients[0].creditCards.push(new CreditCard("VISA",new Date("05/19/2025"), 333, "FRANCISCO PEREZ", 28, 5))
+clients[0].creditCards.push(new CreditCard("MASTERCARD", new Date("07/19/2025"), 444, "FRANCISCO PEREZ", 28, 5));
 
 clients[1].creditCards.push(new CreditCard("VISA",new Date("06/19/2025"), 333, "BAUTISTA RIZZO", 28, 5))
 clients[1].creditCards.push(new CreditCard("MASTERCARD", new Date("08/19/2025"), 444, "BAUTISTA RIZZO", 28, 5));
