@@ -12,7 +12,6 @@ document.getElementById("movements").style.display = "none";
 
 //26
 function logout() {
-    // Ocultar funcionalidades del home banking
     document.getElementsByClassName("navbar-toggler")[0].style.display = "none";
     document.getElementById("offcanvasMenu").style.display = "none";
     document.getElementById("accounts").style.display = "none";
@@ -24,14 +23,15 @@ function logout() {
     document.getElementById("investments").style.display = "none";
     document.getElementsByClassName("row")[1].innerHTML = "";
     document.getElementById("misCuentas").innerHTML = "";
-    // Mostrar el formulario de login/registro
+
+    //login/registro
     document.getElementsByClassName("col-md-6")[0].style.display = "";
 
     for (let i = 0; i < document.getElementsByClassName("form-floating").length; i++) {
         document.getElementsByClassName("form-floating")[i].children[0].value=""
     }
-    console.log("Sesión cerrada exitosamente");
-    alert("Sesión cerrada. Volvés a la pantalla de inicio.");
+    console.log("Sesión cerrada");
+    alert("Sesión cerrada");
 
     document.getElementById("debitCardAccountSelect").innerHTML = "";
     document.getElementById("transferOrigin").innerHTML = "";
@@ -58,7 +58,7 @@ function crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, 
                     <p class="card-text mb-1"><strong>Alias:</strong> ${alias}</p>
                     <p class="card-text mb-3"><strong>CBU:</strong> ${cbu}</p>
                     <div class="d-grid">
-                        <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="verMovimientos(${id})" data-bs-toggle="modal" data-bs-target="#modal">Ver movimientos</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ function crearCajaDolares(id, balance, alias, cbu) {
                     <p class="card-text mb-1"><strong>Alias:</strong> ${alias}</p>
                     <p class="card-text mb-3"><strong>CBU:</strong> ${cbu}</p>
                     <div class="d-grid">
-                        <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="verMovimientos(${id})" data-bs-toggle="modal" data-bs-target="#modal">Ver movimientos</button>
                     </div>
                 </div>
             </div>
@@ -160,5 +160,51 @@ function agregarCajaASelectInversion(id, currency, alias, cbu) {
     `;
 }
 
+//{}
 //28
-function VerMovimientos() 
+function VerMovimientos(id) {
+    let movimientos;
+
+    for (let i = 0; i < client.length; i++) {
+        for (let j = 0; j < client[i].savingBanks.length; j++) {
+            if (client[i].savingBanks[j].id == id) {
+                movimientos = encontrarSavingBankMovement(client[idLogued - 1].savingBanks[j].id);
+
+                // Crear tabla como en tu estructura (sin usar let html = ``)
+                let tabla = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del tercero</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                for (let k = 0; k < movimientos.length; k++) {
+                    tabla += `
+                        <tr>
+                            <td>${movimientos[k].nombreDelTercero}</td>
+                            <td>${movimientos[k].monto}</td>
+                        </tr>
+                    `;
+                }
+
+                tabla += `
+                        </tbody>
+                    </table>
+                `;
+
+                // Insertar toda la tabla dentro del modal
+                document.getElementById("modalBody").innerHTML = tabla;
+            }
+        }
+    }
+
+    // Mostrar el modal (si usás Bootstrap 5)
+    const modal = new bootstrap.Modal(document.getElementById('modal'));
+    modal.show();
+}
+
+
