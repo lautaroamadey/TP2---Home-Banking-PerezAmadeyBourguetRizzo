@@ -299,24 +299,32 @@ function register() {
     return true;
 }
 
+
 //27
-function debitCardARS (currency, balance, descubiertoDisponible, descubiertoUsado, Alias, CBU) {
-    <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Caja de Ahorro en Pesos</h5>
-                            <p class="card-text mb-1"><strong>Moneda:</strong> ARS</p>
-                            <p class="card-text mb-1"><strong>Saldo:</strong> $120.000</p>
-                            <p class="card-text mb-1"><strong>Descubierto disponible:</strong> $5.000</p>
-                            <p class="card-text mb-1"><strong>Descubierto usado:</strong> $2.000</p>
-                            <p class="card-text mb-1"><strong>Alias:</strong> mi.cuenta.pesos</p>
-                            <p class="card-text mb-3"><strong>CBU:</strong> 0123456789012345678901</p>
-                            <div class="d-grid">
-                                <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+function llenarTarjetaSavingBank() {
 
+    // Paso 1: Accedemos al cliente logueado restando 1 porque los arrays comienzan en 0
+    // y tomamos su array de cajas de ahorro (savingsBanks)
+    let savings = clients[idLogued - 1].savingsBanks;
 
+    // Paso 2: Recorremos todas las cajas de ahorro del cliente
+    for (let i = 0; i < savings.length; i++) {
+
+        // Paso 3: Verificamos si la caja actual es en pesos (ARS)
+        if (savings[i].currency === "ARS") {
+
+            // Paso 4: Extraemos los datos importantes de esa caja en pesos
+            let id = savings[i].id;                              // ID único de la caja
+            let balance = savings[i].balance;                    // Saldo disponible
+            let descubiertoDisponible = savings[i].limit - savings[i].overdraft; // Límite menos descubierto usado
+            let descubierto = savings[i].overdraft;             // Monto del descubierto ya usado
+            let alias = savings[i].alias;                        // Alias de la cuenta
+            let cbu = savings[i].cbu;                            // CBU de 22 dígitos
+
+            crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, cbu);
+        }
+    }
 }
+
+
+

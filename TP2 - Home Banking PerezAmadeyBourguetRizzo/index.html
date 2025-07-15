@@ -96,7 +96,7 @@
                                         placeholder="Contraseña" required>
                                     <label for="loginPassword">Contraseña</label>
                                 </div>
-                                <button type="button" class="btn btn-primary w-100" onclick="login()" >Ingresar</button>
+                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank()" >Ingresar</button>
                             </form>
                         </div>
 
@@ -143,22 +143,7 @@
 
             <div class="row">
                 <!-- Ejemplo de una card para caja de ahorro en pesos -->
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Caja de Ahorro en Pesos</h5>
-                            <p class="card-text mb-1"><strong>Moneda:</strong> ARS</p>
-                            <p class="card-text mb-1"><strong>Saldo:</strong> $120.000</p>
-                            <p class="card-text mb-1"><strong>Descubierto disponible:</strong> $5.000</p>
-                            <p class="card-text mb-1"><strong>Descubierto usado:</strong> $2.000</p>
-                            <p class="card-text mb-1"><strong>Alias:</strong> mi.cuenta.pesos</p>
-                            <p class="card-text mb-3"><strong>CBU:</strong> 0123456789012345678901</p>
-                            <div class="d-grid">
-                                <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Ejemplo de una card para caja de ahorro en dólares -->
                 <div class="col-md-6 col-lg-4 mb-4">
@@ -170,7 +155,7 @@
                             <p class="card-text mb-1"><strong>Alias:</strong> mi.cuenta.dolares</p>
                             <p class="card-text mb-3"><strong>CBU:</strong> 0987654321098765432109</p>
                             <div class="d-grid">
-                                <button class="btn btn-outline-primary btn-sm">Ver movimientos</button>
+                                <button class="btn btn-outline-primary btn-sm" >Ver movimientos</button>
                             </div>
                         </div>
                     </div>
