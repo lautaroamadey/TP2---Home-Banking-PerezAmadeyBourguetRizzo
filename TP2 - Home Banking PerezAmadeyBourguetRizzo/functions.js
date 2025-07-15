@@ -299,9 +299,9 @@ function register() {
     return true;
 }
 
-//27 /*
-/*function
-<div class="col-md-6 col-lg-4 mb-4">
+//27
+function debitCardARS (currency, balance, descubiertoDisponible, descubiertoUsado, Alias, CBU) {
+    <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="card-title">Caja de Ahorro en Pesos</h5>
@@ -317,4 +317,6 @@ function register() {
                         </div>
                     </div>
                 </div>
-*/
+
+
+}
