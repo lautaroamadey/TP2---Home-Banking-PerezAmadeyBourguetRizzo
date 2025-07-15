@@ -69,7 +69,7 @@ class Client {
 
 
  const clients = [];
- clients.push(new Client (48588205, "aa", "Francisco", "Perez Stefan"))
+ clients.push(new Client (12345678, "aa", "Francisco", "Perez Stefan"))
  clients.push(new Client (48680134, "bb", "Bautista", "Rizzo"))
  clients.push(new Client (48316998, "cc", "Tomas", "Bourguet"))
  clients.push(new Client (47477890, "dd", "Lautaro", "Amadey"))

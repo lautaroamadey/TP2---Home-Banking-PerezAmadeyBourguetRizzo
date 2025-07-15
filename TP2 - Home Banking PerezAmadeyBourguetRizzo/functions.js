@@ -222,6 +222,7 @@ function login() {
     }
 
     return true;
+    
 }
 
 
@@ -300,7 +301,7 @@ function register() {
 }
 
 
-//27
+//27 a.
 function llenarTarjetaSavingBank() {
 
     // Paso 1: Accedemos al cliente logueado restando 1 porque los arrays comienzan en 0
@@ -350,8 +351,155 @@ function llenarCajaDolares() {
     }
 }
 
-function llenarTarjetasDebito() {
-    TarjetasDebito(id, currency, alias)
+
+
+//27 b.
+function mostrarSavingBank() {
+    // Paso 1: Accedemos a las cajas de ahorro del cliente actualmente logueado
+    let cliente = clients[findClient(idLogued)].savingsBanks;
+
+    // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
+    document.getElementById("debitCardAccountSelect").innerHTML = "";
+
+    // Paso 3: Recorremos todas las cajas del cliente (pueden ser en ARS o USD)
+    for (let i = 0; i < cliente.length; i++) {
+        // Extraemos los datos importantes de cada caja
+        let id = cliente[i].id;
+        let currency = cliente[i].currency;
+        let alias = cliente[i].alias;
+        let cbu = cliente[i].cbu;
+
+        // Paso 4: Llamamos a la función del DOM para mostrar esta caja en el select
+        agregarCajaAlSelectDebito(id, currency, alias, cbu);
+    }
 }
 
 
+//27 c.
+function llenarSelectTransferencias() {
+    let clienteLogueado = clients[findClient(idLogued)];
+
+    // Limpiar los selects
+    document.getElementById("transferOrigin").innerHTML = "";
+    document.getElementById("transferDestinysSelect").innerHTML = "";
+
+    // Cajas propias → selectOrigen
+    for (let i = 0; i < clienteLogueado.savingsBanks.length; i++) {
+        let cuenta = clienteLogueado.savingsBanks[i];
+        agregarCajaOrigen(cuenta.id, cuenta.currency, cuenta.alias, cuenta.cbu);
+    }
+
+    // Cajas de otros clientes → selectDestinatario
+    for (let j = 0; j < clients.length; j++) {
+        if (clients[j].id !== idLogued) {
+            let nombre = clients[j].name;
+            for (let k = 0; k < clients[j].savingsBanks.length; k++) {
+                let cuenta = clients[j].savingsBanks[k];
+                agregarCajaDestinatario(cuenta.id, cuenta.currency, cuenta.alias, cuenta.cbu, nombre);
+            }
+        }
+    }
+}
+
+//27 d.
+function mostrarSavingBankPesos() {
+    // Paso 1: Accedemos a las cajas de ahorro del cliente actualmente logueado
+    let cliente = clients[findClient(idLogued)].savingsBanks;
+
+    // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
+    document.getElementById("pesosAccount").innerHTML = "";
+
+    // Paso 3: Recorremos todas las cajas del cliente
+    for (let i = 0; i < cliente.length; i++) {
+        if (cliente[i].currency === "ARS") {
+            // Extraemos los datos importantes de cada caja
+            let id = cliente[i].id;
+            let alias = cliente[i].alias;
+            let cbu = cliente[i].cbu;
+
+            // Paso 4: Llamamos a la función del DOM para mostrar esta caja en el select
+            cajaPesos(id, alias, cbu);
+        }
+    }
+}
+
+function mostrarSavingBankDolares() {
+    // Paso 1: Accedemos a las cajas de ahorro del cliente actualmente logueado
+    let cliente = clients[findClient(idLogued)].savingsBanks;
+
+    // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
+    document.getElementById("dollarsAccount").innerHTML = "";
+
+    // Paso 3: Recorremos todas las cajas del cliente
+    for (let i = 0; i < cliente.length; i++) {
+        if (cliente[i].currency === "USD") { // ← Mostramos solo cuentas en dólares
+            // Extraemos los datos importantes de cada caja
+            let id = cliente[i].id;
+            let alias = cliente[i].alias;
+            let cbu = cliente[i].cbu;
+
+            // Paso 4: Llamamos a la función del DOM para mostrar esta caja en el select
+            cajaDolares(id, alias, cbu);
+        }
+    }
+}
+
+
+//27 e.
+function mostrarCreditCards() {
+    // Paso 1: Accedemos a las tarjetas de crédito del cliente logueado
+    let creditCards = clients[findClient(idLogued)].creditCards;
+
+    // Paso 2: Limpiamos el select antes de llenarlo
+    document.getElementById("creditCardSelect").innerHTML = "";
+
+    // Paso 3: Recorremos cada tarjeta y llamamos a la función para renderizarla
+    for (let i = 0; i < creditCards.length; i++) {
+        let provider = creditCards[i].provider;
+        let displayedName = creditCards[i].displayedName;
+        let id = creditCards[i].id;
+
+        creditCardOption(id, provider, displayedName);
+    }
+}
+
+
+//27 f.
+function mostrarTarjetasCredito() {
+    let creditCards = findCreditCards(idLogued);
+
+    for (let i = 0; i < creditCards.length; i++) {
+        let tarjeta = creditCards[i];
+        agregarTarjetaMetodoPago(tarjeta.id, "Crédito", tarjeta.provider, tarjeta.displayedName, tarjeta.securityCode);
+    }
+}
+
+function mostrarTarjetasDebito() {
+    let debitCards = findDebitCards(idLogued);
+
+    for (let i = 0; i < debitCards.length; i++) {
+        let tarjeta = debitCards[i];
+        agregarTarjetaMetodoPago(tarjeta.id, "Débito", tarjeta.provider, tarjeta.displayedName, tarjeta.securityCode);
+    }
+}
+
+//27 g.
+function mostrarCajasParaInversiones() {
+    // Paso 1: Accedemos a las cajas de ahorro del cliente actualmente logueado
+    let cliente = clients[findClient(idLogued)].savingsBanks;
+
+    // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
+    document.getElementById("investmentAccountSelect").innerHTML = "";    
+
+    // Paso 3: Recorremos todas las cajas del cliente (pueden ser en ARS o USD)
+    for (let i = 0; i < cliente.length; i++) {
+        // Extraemos los datos importantes de cada caja
+        let id = cliente[i].id;
+        let currency = cliente[i].currency;
+        let alias = cliente[i].alias;
+        let cbu = cliente[i].cbu;
+
+        // Paso 4: Llamamos a la función del DOM para mostrar esta caja en el select
+        agregarCajaASelectInversion(id, currency, alias, cbu);
+    }
+}

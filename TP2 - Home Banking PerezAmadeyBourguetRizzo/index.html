@@ -96,7 +96,7 @@
                                         placeholder="Contraseña" required>
                                     <label for="loginPassword">Contraseña</label>
                                 </div>
-                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank(), llenarCajaDolares()" >Ingresar</button>
+                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank(), llenarCajaDolares(), mostrarSavingBank(), llenarSelectTransferencias(), mostrarSavingBankPesos(), mostrarSavingBankDolares(), mostrarCreditCards(), mostrarTarjetasCredito(), mostrarTarjetasDebito(), mostrarCajasParaInversiones()" >Ingresar</button>
                             </form>
                         </div>
 
@@ -157,8 +157,8 @@
             <!-- Selector de tarjeta -->
             <div class="mb-3">
                 <label for="debitCardAccountSelect" class="form-label">Seleccionar caja de ahorro</label>
-                <select id="debitCardAccountSelect" class="form-select" onchange="llenarTarjetasDebito()">
-                    <!-- Opciones a generar dinámicamente -->
+                <select id="debitCardAccountSelect" class="form-select">
+                    <!-- Opciones a generar dinámicamente onchange="llenarTarjetasDebito()"--> 
                 </select>
             </div>
 
