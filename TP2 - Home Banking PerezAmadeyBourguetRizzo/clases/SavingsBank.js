@@ -7,7 +7,7 @@ class SavingsBank {
         this.id = savingsBanksId;
         savingsBanksId++;
         this.currency = currency;
-        this.balance = 0;
+        this.balance = 10000;
 
         if (currency === "ARS") {
             this.limit = limit;

@@ -4,8 +4,8 @@ function findClient(clientsId) {
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].id === clientsId)
             return i
-    } 
-    return -1    
+    }
+    return -1
 }
 
 
@@ -27,11 +27,23 @@ function findSavingBank(clientsId, moneda) {
 
     if (moneda == "ARS") {
         return cantSBARS;
-    } else if (moneda == "USD"){
+    } else if (moneda == "USD") {
         return cantSBUSD;
     } else {
         return cantSB
     }
+}
+
+//10.5
+function encontrarSavingBank(idCaja){
+    for(let i = 0;i<clients.length;i++){
+        for(let j = 0; j < clients[i].savingsBanks.length;j++){
+            if(clients[i].savingsBanks[j].id==idCaja){
+                return clients[i].savingsBanks[j]
+            }
+        }
+    }
+
 }
 
 //11
@@ -40,8 +52,8 @@ function findDebitCards(clientsId) {
     let posCliente = findClient(clientsId);
     let cliente = clients[posCliente];
 
-    for (let i=0; i<cliente.savingsBanks.length;i++) {
-        for (let j=0; j< cliente.savingsBanks[i].debitCards.length; j++) {
+    for (let i = 0; i < cliente.savingsBanks.length; i++) {
+        for (let j = 0; j < cliente.savingsBanks[i].debitCards.length; j++) {
             debitCards.push(cliente.savingsBanks[i].debitCards[j]);
         }
     }
@@ -52,8 +64,8 @@ function findDebitCards(clientsId) {
 //12
 function findDebitCardById(debitCardIds) {
     for (let i = 0; i < clients.length; i++) {
-        for (let j=0; j<clients[i].savingsBanks.length;j++) {
-            for (let k=0; k < clients[i].savingsBanks[j].debitCards.length; k++) {
+        for (let j = 0; j < clients[i].savingsBanks.length; j++) {
+            for (let k = 0; k < clients[i].savingsBanks[j].debitCards.length; k++) {
                 if (clients[i].savingsBanks[j].debitCards[k].id == debitCardIds) {
                     return clients[i].savingsBanks[j].debitCards[k];
                 }
@@ -72,9 +84,9 @@ function findCreditCards(clientsId) {
 }
 
 //14
-function findCreditCardById(creditCardIds){
+function findCreditCardById(creditCardIds) {
     for (let i = 0; i < clients.length; i++) {
-        for (let j=0; j<clients[i].creditCards.length;j++) {
+        for (let j = 0; j < clients[i].creditCards.length; j++) {
             if (clients[i].creditCards[j].id == creditCardIds) {
                 return clients[i].creditCards[j];
             }
@@ -86,14 +98,14 @@ function findCreditCardById(creditCardIds){
 //15 
 function findMovementsBySavingsBankId(savingsBanksId) {
     let cajasAhorro
-    for (let i=0;i < clients.length; i++) {
+    for (let i = 0; i < clients.length; i++) {
         cajasAhorro = findSavingBank(clients[i].id);
-        for (let j=0; j < cajasAhorro.length; j++) {
+        for (let j = 0; j < cajasAhorro.length; j++) {
             if (cajasAhorro[j].id == savingsBanksId) {
                 return cajasAhorro[j].movements
             }
         }
-    
+
     }
     return []
 }
@@ -112,7 +124,7 @@ function findMovementsByDebitCardId(debitCardIds) {
         }
     }
     return [];
-} 
+}
 
 
 //17
@@ -129,43 +141,15 @@ function findMovementsByCreditCardId(creditCardId) {
 }
 
 //23
-function realizarTransferencia(idCajaOrigen, destinoCaja, monto) {
-    if (monto <= 0) return false;
-
-    let cajaOrigen = null;
-    let cajaDestino = null;
-
-    // Buscar caja de origen
-    for (let i = 0; i < clients.length; i++) {
-        for (let j = 0; j < clients[i].savingsBanks.length; j++) {
-            if (clients[i].savingsBanks[j].id === idCajaOrigen) {
-                cajaOrigen = clients[i].savingsBanks[j];
-            }
-        }
+function realizarTransferencia(id1, id2, monto) {
+    let caja1 = encontrarSavingBank(id1)
+    let caja2 = encontrarSavingBank(id2)
+    if (caja1.extraer(monto)) {
+        caja2.ingresar(monto)
+        showModal("Exito", "Has realizado la transferencia")
+    } else {
+        showModal("Error", "No se ha podido realizar")
     }
-
-    // Buscar caja de destino (por ID, alias o CBU)
-    for (let i = 0; i < clients.length; i++) {
-        for (let j = 0; j < clients[i].savingsBanks.length; j++) {
-            let c = clients[i].savingsBanks[j];
-            if (c.id === destinoCaja || c.alias === destinoCaja || c.cbu === destinoCaja) {
-                cajaDestino = c;
-            }
-        }
-    }
-
-    if (!cajaOrigen || !cajaDestino) return false;
-
-    // Validar que ambas cajas operen con la misma moneda
-    if (cajaOrigen.currency !== cajaDestino.currency) return false;
-
-    // Intentar extracción
-    const extraccionExitosa = cajaOrigen.extraer(monto);
-    if (!extraccionExitosa) return false;
-
-    // Intentar ingreso
-    const resultadoIngreso = cajaDestino.ingresar(monto);
-    return resultadoIngreso !== -1;
 }
 
 // 24
@@ -222,7 +206,7 @@ function login() {
     }
 
     return true;
-    
+
 }
 
 
@@ -489,7 +473,7 @@ function mostrarCajasParaInversiones() {
     let cliente = clients[findClient(idLogued)].savingsBanks;
 
     // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
-    document.getElementById("investmentAccountSelect").innerHTML = "";    
+    document.getElementById("investmentAccountSelect").innerHTML = "";
 
     // Paso 3: Recorremos todas las cajas del cliente (pueden ser en ARS o USD)
     for (let i = 0; i < cliente.length; i++) {
@@ -503,3 +487,90 @@ function mostrarCajasParaInversiones() {
         agregarCajaASelectInversion(id, currency, alias, cbu);
     }
 }
+
+
+
+//29 a.
+function actualizarCardDebito() {
+    let idSeleccionado = Number(document.getElementById("debitCardAccountSelect").value);
+    let tarjeta = findDebitCardById(idSeleccionado);
+
+    document.getElementById("debitCardTitle").textContent = `${tarjeta.provider} •••• ${String(tarjeta.number).slice(-4)}`;
+    document.getElementById("debitCardHolder").textContent = tarjeta.displayedName;
+    document.getElementById("debitCardExpiry").textContent = tarjeta.expireDate.toLocaleDateString();
+    document.getElementById("debitCardNumber").value = tarjeta.number;
+    document.getElementById("debitCardCvv").value = tarjeta.securityCode;
+}
+
+// 29 b. Toggle del número de tarjeta
+document.getElementById("toggleDebitCardNumber").addEventListener("click", function () {
+    const input = document.getElementById("debitCardNumber");
+    const icon = document.getElementById("debitCardNumberIcon");
+
+    if (input.type === "text") {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+});
+
+// 29 b. Toggle del código de seguridad (CVV)
+document.getElementById("toggleDebitCvv").addEventListener("click", function () {
+    let input = document.getElementById("debitCardCvv");
+    let icon = document.getElementById("debitCvvIcon");
+
+    if (input.type === "text") {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+});
+
+
+
+//30
+function inicializarTransferencias() {
+    let form = document.querySelector("#transfers form");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let idOrigen = parseInt(document.getElementById("transferOrigin").value);
+        let monto = parseFloat(document.getElementById("transferAmount").value);
+        let destinoTexto = document.getElementById("transferDestiny").value.trim();
+        let idDestinoSelect = document.getElementById("transferDestinysSelect").value;
+
+        // Prioriza alias/CBU si el input está lleno
+        let destino = destinoTexto !== "" ? destinoTexto : parseInt(idDestinoSelect);
+
+        let ok = realizarTransferencia(idOrigen, destino, monto);
+
+        if (ok) {
+            showModal("Transferencia Exitosa", `Se transfirieron $${monto} correctamente.`);
+
+            // Vaciar campos
+            document.getElementById("transferAmount").value = "";
+            document.getElementById("transferDestiny").value = "";
+            document.getElementById("transferDestinysSelect").selectedIndex = 0;
+            document.getElementById("transferOrigin").selectedIndex = 0;
+
+            // Actualizar visual de "Mis Cuentas"
+            document.getElementById("misCuentas").innerHTML = "";
+            llenarTarjetaSavingBank();
+            llenarCajaDolares();
+        } else {
+            showModal("Error en la transferencia", "No se pudo realizar la operación. Verifique los datos ingresados.");
+        }
+    });
+}
+
+// (Mantener la función realizarTransferencia tal como está, es compatible)
+

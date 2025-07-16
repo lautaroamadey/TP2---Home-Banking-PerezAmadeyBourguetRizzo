@@ -96,7 +96,7 @@
                                         placeholder="Contraseña" required>
                                     <label for="loginPassword">Contraseña</label>
                                 </div>
-                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank(), llenarCajaDolares(), mostrarSavingBank(), llenarSelectTransferencias(), mostrarSavingBankPesos(), mostrarSavingBankDolares(), mostrarCreditCards(), mostrarTarjetasCredito(), mostrarTarjetasDebito(), mostrarCajasParaInversiones()" >Ingresar</button>
+                                <button type="button" class="btn btn-primary w-100" onclick="login(), llenarTarjetaSavingBank(), llenarCajaDolares(), mostrarSavingBank(), llenarSelectTransferencias(), mostrarSavingBankPesos(), mostrarSavingBankDolares(), mostrarCreditCards(), mostrarTarjetasCredito(), mostrarTarjetasDebito(), mostrarCajasParaInversiones() " >Ingresar</button>
                             </form>
                         </div>
 
@@ -157,7 +157,8 @@
             <!-- Selector de tarjeta -->
             <div class="mb-3">
                 <label for="debitCardAccountSelect" class="form-label">Seleccionar caja de ahorro</label>
-                <select id="debitCardAccountSelect" class="form-select">
+                <select id="debitCardAccountSelect" class="form-select" onchange="actualizarCardDebito()">
+                    <option selected disabled>Seleccionar Caja de ahorro</option>
                     <!-- Opciones a generar dinámicamente onchange="llenarTarjetasDebito()"--> 
                 </select>
             </div>
@@ -227,7 +228,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Realizar transferencia</button>
+                    <button type="submit" class="btn btn-primary" onclick="inicializarTransferencias()">Realizar transferencia</button>
                 </div>
             </form>
         </section>
@@ -468,7 +469,7 @@
         <!-- Modal -->
         <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content">
+                <div class="modal-content" id="tablaModal">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitle">Título del modal</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -491,7 +492,7 @@
     <script src="clases/Movements.js"></script>
     <script src="functions.js"></script>
     <script src="dom.js"></script>
-    <script src="clases/pruebas.js"></script>
+
 
 </body>
 

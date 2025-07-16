@@ -43,7 +43,7 @@ function logout() {
     document.getElementById("creditCardSelect").innerHTML = "";
 }
 
-//{}
+
 //27 a.
 function crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, cbu) {
     document.getElementById("misCuentas").innerHTML += `
@@ -58,7 +58,7 @@ function crearCajaPesos(id, balance, descubiertoDisponible, descubierto, alias, 
                     <p class="card-text mb-1"><strong>Alias:</strong> ${alias}</p>
                     <p class="card-text mb-3"><strong>CBU:</strong> ${cbu}</p>
                     <div class="d-grid">
-                        <button class="btn btn-outline-primary btn-sm" onclick="verMovimientos(${id})" data-bs-toggle="modal" data-bs-target="#modal">Ver movimientos</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="mostrarMovimientos(${id})">Ver movimientos</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ function crearCajaDolares(id, balance, alias, cbu) {
                     <p class="card-text mb-1"><strong>Alias:</strong> ${alias}</p>
                     <p class="card-text mb-3"><strong>CBU:</strong> ${cbu}</p>
                     <div class="d-grid">
-                        <button class="btn btn-outline-primary btn-sm" onclick="verMovimientos(${id})" data-bs-toggle="modal" data-bs-target="#modal">Ver movimientos</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="mostrarMovimientos(${id})">Ver movimientos</button>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@ function crearCajaDolares(id, balance, alias, cbu) {
 //27 b.
 function agregarCajaAlSelectDebito(id, currency, alias, cbu) {
     // Accedemos al select del DOM
-    const select = document.getElementById("debitCardAccountSelect");
+    let select = document.getElementById("debitCardAccountSelect");
 
     // Creamos dinámicamente una opción dentro del select, con la información visible al usuario
     // El value corresponde al id de la caja (lo más útil para identificarla luego)
@@ -162,49 +162,66 @@ function agregarCajaASelectInversion(id, currency, alias, cbu) {
 
 //{}
 //28
-function VerMovimientos(id) {
-    let movimientos;
 
-    for (let i = 0; i < client.length; i++) {
-        for (let j = 0; j < client[i].savingBanks.length; j++) {
-            if (client[i].savingBanks[j].id == id) {
-                movimientos = encontrarSavingBankMovement(client[idLogued - 1].savingBanks[j].id);
+function showModal(title, body) {
+    // Paso 1: Insertar título y contenido en el modal
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalBody").innerHTML = body;
 
-                // Crear tabla como en tu estructura (sin usar let html = ``)
-                let tabla = `
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre del tercero</th>
-                                <th>Monto</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
+    // Paso 2: Crear e iniciar el modal de Bootstrap
+    let modal = new bootstrap.Modal(document.getElementById("modal"), {
+        keyboard: true,
+        focus: true
+    });
 
-                for (let k = 0; k < movimientos.length; k++) {
-                    tabla += `
-                        <tr>
-                            <td>${movimientos[k].nombreDelTercero}</td>
-                            <td>${movimientos[k].monto}</td>
-                        </tr>
-                    `;
-                }
-
-                tabla += `
-                        </tbody>
-                    </table>
-                `;
-
-                // Insertar toda la tabla dentro del modal
-                document.getElementById("modalBody").innerHTML = tabla;
-            }
-        }
-    }
-
-    // Mostrar el modal (si usás Bootstrap 5)
-    let modal = new bootstrap.Modal(document.getElementById('modal'));
     modal.show();
 }
 
+
+function mostrarMovimientos(idCaja) {
+    let movimientos = findMovementsBySavingsBankId(idCaja);
+
+    // Construir el HTML de la tabla
+    let tablaHTML = `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre del tercero</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    for (let i = 0; i < movimientos.length; i++) {
+        let thirdPartyName = movimientos[i].thirdPartyName;
+        let amount = movimientos[i].amount;
+
+        tablaHTML += `
+            <tr>
+                <td>${thirdPartyName}</td>
+                <td>$${amount}</td>
+            </tr>
+        `;
+    }
+
+    tablaHTML += `
+            </tbody>
+        </table>
+    `;
+
+    showModal("Movimientos de la cuenta", tablaHTML);
+}
+
+function cerrarModal() {
+    let modalElement = document.getElementById("modal");
+    let modalInstance = bootstrap.Modal.getInstance(modalElement);
+
+    if (modalInstance) {
+        modalInstance.hide();
+    }
+
+    // Limpiar contenido del modal
+    document.getElementById("modalBody").innerHTML = "";
+}
 
