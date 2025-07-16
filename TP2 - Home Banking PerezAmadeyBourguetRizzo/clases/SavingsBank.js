@@ -1,6 +1,6 @@
 let savingsBanksId = 1;
 // Es un número único de 22 dígitos que identifica la cuenta
-let cbuCounter = 1000000000000000000000;
+let cbuCounter = 1000;
 
 class SavingsBank {
     constructor(currency, alias, limit) {
