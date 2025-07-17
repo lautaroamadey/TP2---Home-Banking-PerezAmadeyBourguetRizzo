@@ -226,3 +226,98 @@ function cerrarModal() {
     document.getElementById("modalBody").innerHTML = "";
 }
 
+//31
+function mostrarSelectDolares() {
+    let cliente = findClient(idLogued);
+    let selectPesos = document.getElementById("pesosAccount");
+    let selectDolares = document.getElementById("dollarsAccount");
+
+    // Limpiar opciones anteriores
+    selectPesos.innerHTML = '<option selected disabled>Seleccionar cuenta...</option>';
+    selectDolares.innerHTML = '<option selected disabled>Seleccionar cuenta...</option>';
+
+    cliente.savingsBanks.forEach(caja => {
+        let option = document.createElement("option");
+        option.value = caja.id;
+        option.text = `${caja.currency} - ${caja.balance} (${caja.displayedName})`;
+        if (caja.currency === "ARS") {
+            selectPesos.appendChild(option);
+        } else if (caja.currency === "USD") {
+            selectDolares.appendChild(option);
+        }
+    });
+}
+
+function comprarDolares() {
+    console.log("Función comprarDolares ejecutada");
+
+    let monto = parseFloat(document.getElementById("dollarsAmount").value);
+    let idPesos = document.getElementById("pesosAccount").value;
+    let idDolares = document.getElementById("dollarsAccount").value;
+
+    if (isNaN(monto) || monto <= 0) {
+        showModal("Error", "Ingresá un monto válido");
+        return;
+    }
+
+    let cajaPesos = encontrarSavingBank(idPesos);
+    let cajaDolares = encontrarSavingBank(idDolares);
+    const tipoCambio = 1200;
+
+    if (cajaPesos.extraer(monto * tipoCambio)) {
+        let montoEnDolares = monto;
+        cajaDolares.ingresar(montoEnDolares);
+        showModal("Éxito", `Compraste USD ${montoEnDolares.toFixed(2)}`);
+        document.getElementById("dollarsAmount").value = "";
+        actualizarMisCuentas();
+        mostrarSelectDolares();
+    } else {
+        showModal("Error", "No tenés saldo suficiente en pesos");
+    }
+}
+
+function venderDolares() {
+    let monto = parseFloat(document.getElementById("dollarsAmount").value);
+    let idPesos = document.getElementById("pesosAccount").value;
+    let idDolares = document.getElementById("dollarsAccount").value;
+
+    if (isNaN(monto) || monto <= 0) {
+        showModal("Error", "Ingresá un monto válido");
+        return;
+    }
+
+    let cajaPesos = encontrarSavingBank(idPesos);
+    let cajaDolares = encontrarSavingBank(idDolares);
+    const tipoCambio = 1150;
+
+    if (cajaDolares.extraer(monto)) {
+        let montoEnPesos = monto * tipoCambio;
+        cajaPesos.ingresar(montoEnPesos);
+        showModal("Éxito", `Vendiste USD ${monto.toFixed(2)} por $${montoEnPesos.toFixed(2)}`);
+        document.getElementById("dollarsAmount").value = "";
+        actualizarMisCuentas();
+        mostrarSelectDolares();
+    } else {
+        showModal("Error", "No tenés suficientes dólares");
+    }
+}
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const selectOperacion = document.getElementById("dollarOperation");
+    const operacion = selectOperacion.value;
+
+    if (!operacion || selectOperacion.selectedIndex === 0) {
+        showModal("Error", "Seleccioná si querés comprar o vender dólares");
+        return;
+    }
+
+    if (operacion === "compra") {
+        comprarDolares();
+    } else if (operacion === "venta") {
+        venderDolares();
+    } else {
+        showModal("Error", "Operación no reconocida");
+    }
+});

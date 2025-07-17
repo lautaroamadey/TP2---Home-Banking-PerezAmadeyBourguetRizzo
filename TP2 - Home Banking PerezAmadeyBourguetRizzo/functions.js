@@ -362,7 +362,6 @@ function llenarCajaDolares() {
 }
 
 function actualizarMisCuentas() {
-    document.getElementById("misCuentas").innerHTML = ""; // Limpiar lo anterior
     llenarTarjetaSavingBank(); // Recarga cajas en pesos
     llenarCajaDolares();       // Recarga cajas en dólares
 }
@@ -641,11 +640,10 @@ function tranferenciasss() {
     let monto = document.getElementById("transferAmount").value;
 
     if (aliasDestino !== "") {
-        tranferenciaAlias(); // ✅ Usa alias
+        tranferenciaAlias(); 
     } else {
-        let exito = realizarTransferencia(idOrigen, idDestino, monto); // ✅ Usa ID
+        let exito = realizarTransferencia(idOrigen, idDestino, monto); 
         if (exito) {
-            // Limpiar campos
             document.getElementById("transferOrigin").value = "nada";
             document.getElementById("transferDestiny").value = "";
             document.getElementById("transferDestinysSelect").value = "nada";
@@ -655,3 +653,21 @@ function tranferenciasss() {
         }
     }
 }
+
+
+window.addEventListener("DOMContentLoaded", () => {
+    mostrarSelectDolares();
+});
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const operacion = document.getElementById("dollarOperation").value;
+    if (operacion === "compra") {
+        comprarDolares();
+    } else if (operacion === "venta") {
+        venderDolares();
+    } else {
+        showModal("Error", "Seleccioná una operación válida");
+    }
+});
