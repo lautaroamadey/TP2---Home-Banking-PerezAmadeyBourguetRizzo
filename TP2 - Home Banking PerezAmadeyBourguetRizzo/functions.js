@@ -99,18 +99,17 @@ function findCreditCardById(creditCardIds) {
 
 //15 
 function findMovementsBySavingsBankId(savingsBanksId) {
-    let cajasAhorro
     for (let i = 0; i < clients.length; i++) {
-        cajasAhorro = findSavingBank(clients[i].id);
+        let cajasAhorro = clients[i].savingsBanks;
         for (let j = 0; j < cajasAhorro.length; j++) {
             if (cajasAhorro[j].id == savingsBanksId) {
-                return cajasAhorro[j].movements
+                return cajasAhorro[j].movements;
             }
         }
-
     }
-    return []
+    return [];
 }
+
 
 //16 
 function findMovementsByDebitCardId(debitCardIds) {
@@ -144,6 +143,12 @@ function findMovementsByCreditCardId(creditCardId) {
 
 //23
 function realizarTransferencia(id1, id2, monto) {
+    const montoNum = Number(monto);
+    if (isNaN(montoNum) || montoNum <= 0) {
+        showModal("Error", "Monto inválido");
+        return false;
+    }
+
     let caja1 = encontrarSavingBank(id1);
     let caja2 = encontrarSavingBank(id2);
 
@@ -157,16 +162,27 @@ function realizarTransferencia(id1, id2, monto) {
         return false;
     }
 
-    if (caja1.extraer(Number(monto))) { // asegurate que monto sea número
-        caja2.ingresar(Number(monto));
+    if (caja1.extraer(montoNum)) {
+        caja2.ingresar(montoNum);
+
+        // Guardar movimientos con nombre tercero = "transferencia"
+        if (Array.isArray(caja1.movements)) {
+            caja1.movements.push(new Movement("transferencia", -montoNum));
+        }
+
+        if (Array.isArray(caja2.movements)) {
+            caja2.movements.push(new Movement("transferencia", montoNum));
+        }
+
         showModal("Éxito", "Has realizado la transferencia");
         actualizarMisCuentas();
         return true;
     } else {
-        showModal("Error", "No se ha podido realizar");
+        showModal("Error", "No se ha podido realizar la transferencia");
         return false;
     }
 }
+
 
 
 // 24
@@ -411,7 +427,7 @@ function mostrarSavingBankPesos() {
     let cliente = clients[findClient(idLogued)].savingsBanks;
 
     // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
-    document.getElementById("pesosAccount").innerHTML = "";
+    Number(document.getElementById("pesosAccount").innerHTML = "");
 
     // Paso 3: Recorremos todas las cajas del cliente
     for (let i = 0; i < cliente.length; i++) {
@@ -432,7 +448,7 @@ function mostrarSavingBankDolares() {
     let cliente = clients[findClient(idLogued)].savingsBanks;
 
     // Paso 2: Limpiamos el select antes de llenarlo (para evitar duplicados)
-    document.getElementById("dollarsAccount").innerHTML = "";
+    Number(document.getElementById("dollarsAccount").innerHTML = "");
 
     // Paso 3: Recorremos todas las cajas del cliente
     for (let i = 0; i < cliente.length; i++) {
@@ -457,16 +473,23 @@ function mostrarCreditCards() {
     // Paso 2: Limpiamos el select antes de llenarlo
     document.getElementById("creditCardSelect").innerHTML = "";
 
-    // Paso 3: Recorremos cada tarjeta y llamamos a la función para renderizarla
+    // Paso 3: Recorremos cada tarjeta y agregamos la opción al select
     for (let i = 0; i < creditCards.length; i++) {
+        let id = creditCards[i].id;
         let provider = creditCards[i].provider;
         let displayedName = creditCards[i].displayedName;
-        let id = creditCards[i].id;
 
-        creditCardOption(id, provider, displayedName);
+        document.getElementById("creditCardSelect").innerHTML += `
+            <option value="${id}">${provider} - ${displayedName}</option>
+        `;
+    }
+
+    // Paso 4: Seleccionamos la primera tarjeta por defecto y mostramos sus datos
+    if (creditCards.length > 0) {
+        document.getElementById("creditCardSelect").value = creditCards[0].id;
+        rellenarTarjetaCredito();
     }
 }
-
 
 //27 f.
 function mostrarTarjetasCredito() {
@@ -603,24 +626,6 @@ function tranferenciaAlias() {
     }
 }
 
-
-/*
-function tranferenciasss() {
-    let idOrigen = document.getElementById("transferOrigin").value
-    let idDestino = document.getElementById("transferDestinysSelect").value
-    let monto = document.getElementById("transferAmount").value
-
-    realizarTransferencia(idOrigen, idDestino, monto)
-
-    let alias = document.getElementById("transferDestiny").value
-    if (alias == "") {
-        realizarTransferencia()
-    } else { 
-        tranferenciaAlias()
-    }
-    
-}*/
-
 function tranferencias() {
     let idOrigen = document.getElementById("transferOrigin").value;
     let aliasDestino = document.getElementById("transferDestiny").value;
@@ -643,19 +648,236 @@ function tranferencias() {
 }
 
 
-window.addEventListener("DOMContentLoaded", () => {
-    mostrarSelectDolares();
-});
 
-document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
+//31
+function operarDolares(tipo) {
+    let client = clients[findClient(idLogued)];
+    let monto = Number(document.getElementById("dollarsAmount").value);
+    let idPesos = Number(document.getElementById("pesosAccount").value);
+    let idDolares = Number(document.getElementById("dollarsAccount").value);
 
-    let operacion = document.getElementById("dollarOperation").value;
-    if (operacion === "compra") {
-        comprarDolares();
-    } else if (operacion === "venta") {
-        venderDolares();
+    if (isNaN(monto) || monto <= 0 || !idPesos || !idDolares) {
+        showModal("Error", "Verificá los datos ingresados");
+        return;
+    }
+
+    const COTIZACION_COMPRA = 1200; 
+    const COTIZACION_VENTA = 1150;  
+
+    let exito = false;
+
+    if (tipo === "compra") {
+        let montoEnPesos = monto * COTIZACION_COMPRA;
+        exito = client.convertirMoneda(montoEnPesos, idPesos, idDolares);
+
+        if (exito) {
+            let cajaPesos = encontrarSavingBank(idPesos);
+            let cajaDolares = encontrarSavingBank(idDolares);
+            cajaPesos.movements.push(new Movement("compra de dólar", -montoEnPesos));
+            cajaDolares.movements.push(new Movement("compra de dólar", monto));
+        }
+
+    } else if (tipo === "venta") {
+        exito = client.convertirMoneda(monto, idDolares, idPesos);
+
+        if (exito) {
+            let cajaDolares = encontrarSavingBank(idDolares);
+            let cajaPesos = encontrarSavingBank(idPesos);
+            cajaDolares.movements.push(new Movement("venta de dólar", -monto));
+            let montoEnPesos = monto * COTIZACION_VENTA;
+            cajaPesos.movements.push(new Movement("venta de dólar", montoEnPesos));
+        }
+
     } else {
-        showModal("Error", "Seleccioná una operación válida");
+        showModal("Error", "Tipo de operación inválido");
+        return;
+    }
+
+    if (exito) {
+        showModal("Éxito", `Operación de ${tipo === "compra" ? "compra" : "venta"} realizada correctamente`);
+        actualizarMisCuentas();
+        mostrarSavingBankPesos();
+        mostrarSavingBankDolares();
+        document.getElementById("dollarsAmount").value = "";
+        document.getElementById("dollarEquivalent").textContent = "$0";
+    } else {
+        showModal("Error", "No se pudo realizar la operación");
+    }
+}
+
+
+
+//32
+function rellenarTarjetaCredito() {
+    let creditCards = findCreditCards(idLogued)
+    let id = document.getElementById("creditCardSelect").value
+    for (let i = 0; i < creditCards.length; i++) {
+        if (creditCards[i].id == id) {
+            document.getElementById("creditCardTitle").innerText = `${creditCards[i].provider} •••• ${String(creditCards[i].number).slice(-4)}`;
+            document.getElementById("creditCardHolder").innerText = `${creditCards[i].displayedName}`
+            document.getElementById("creditCardExpiry").innerText = `${creditCards[i].expireDate}`
+            document.getElementById("creditCardClosingDate").innerText = `${creditCards[i].closeDate}`
+            document.getElementById("creditCardBalance").innerText = `${creditCards[i].balance}`
+            document.getElementById("creditCardBalanceExpiry").innerText = `${creditCards[i].expiresBalanceDate}`
+            Number(document.getElementById("cardNumber").value = `${creditCards[i].number}`)
+            document.getElementById("cardCvv").value = `${creditCards[i].securityCode}`
+        }
+    }
+}
+
+
+//32 Toggle del número de tarjeta
+document.getElementById("toggleCardNumber").addEventListener("click", function () {
+    const input = document.getElementById("cardNumber");
+    const icon = document.getElementById("cardNumberIcon");
+
+    if (input.type === "text") {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
     }
 });
+
+//32 código de seguridad (CVV)
+document.getElementById("toggleCvv").addEventListener("click", function () {
+    let input = document.getElementById("cardCvv");
+    let icon = document.getElementById("cvvIcon");
+
+    if (input.type === "text") {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+});
+
+
+
+function pagoMinimo() {
+    let idcreditCard = document.getElementById("creditCardSelect").value;
+    let creditCard = findCreditCardById(idcreditCard);
+    let pagoMinimo = creditCard.balance * 0.1;
+    document.getElementById("customPaymentAmount").value = pagoMinimo;
+}
+
+
+function pagoTotal() {
+    let idcreditCard = document.getElementById("creditCardSelect").value
+    let creditCard = findCreditCardById(idcreditCard)
+    let pagoTotal = creditCard.balance
+    document.getElementById("customPaymentAmount").value = pagoTotal
+}
+
+function pagarSaldo() {
+    let idcreditCard = document.getElementById("creditCardSelect").value;
+    let creditCard = findCreditCardById(idcreditCard);
+    let savingbanks = encontrarSavingBank(idLogued);
+    let monto = Number(document.getElementById("customPaymentAmount").value);
+
+    let cuentaOk = false;
+
+    for (let i = 0; i < savingbanks.length; i++) {
+        if (savingbanks[i].currency == "ARS") {
+            if (monto <= savingbanks[i].balance) {
+                savingbanks[i].extraer(monto);
+                cuentaOk = true;
+                document.getElementsByClassName("mb-1")[1].innerHTML = `<strong>Saldo:</strong> $${savingbanks[i].balance}`;
+                break;
+            } else {
+                showModal("Error", "Saldo insuficiente en la caja de ahorro.");
+                return;
+            }
+        }
+    }
+
+    if (!cuentaOk) {
+        showModal("Error", "No se encontró una caja de ahorro en ARS.");
+        return;
+    }
+
+    let checkPago = creditCard.registrarPago(monto);
+
+    if (checkPago === 1) {
+        creditCard.consumptions.push(new Movement("Pago total", -monto, 1));
+    } else if (checkPago === 0) {
+        creditCard.consumptions.push(new Movement("Pago mínimo", -monto, 1));
+    } else if (checkPago === -1) {
+        showModal("Error", "El monto ingresado es menor al pago mínimo.");
+        return;
+    } else {
+        showModal("Error", "No se ha podido realizar el pago.");
+        return;
+    }
+
+    showModal("Éxito", "El pago de la tarjeta fue realizado correctamente.");
+    document.getElementById("creditCardBalance").innerText = `${creditCard.balance}`;
+    document.getElementById("customPaymentAmount").value = "";
+
+    actualizarMisCuentas();
+    rellenarTarjetaCredito();
+    verMovimientosTarjetaCredito();
+}
+
+
+function verMovimientosTarjetaCredito() {
+    let tarjetaId = Number(document.getElementById("creditCardSelect").value);
+    let tarjeta = findCreditCardById(tarjetaId);
+
+    if (!tarjeta) {
+        showModal("Error", "No se encontró la tarjeta.");
+        return;
+    }
+
+    let movimientos = tarjeta.consumptions;
+
+    if (!movimientos || movimientos.length === 0) {
+        showModal("Movimientos de la tarjeta", "<p>No hay movimientos registrados.</p>");
+        return;
+    }
+
+    let tabla = `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Comercio</th>
+                    <th>Monto</th>
+                    <th>Cuotas</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    movimientos.forEach(mov => {
+        tabla += `
+            <tr>
+                <td>${new Date(mov.date).toLocaleDateString()}</td>
+                <td>${mov.thirdPartyName}</td>
+                <td>$${mov.amount}</td>
+                <td>${mov.cuotes || "-"}</td>
+            </tr>
+        `;
+    });
+
+    tabla += `
+            </tbody>
+        </table>
+    `;
+
+    document.getElementById("modalTitle").textContent = "Movimientos de la tarjeta";
+    document.getElementById("modalBody").innerHTML = tabla;
+
+    let modalEl = document.getElementById("modal");
+    let modal = new bootstrap.Modal(modalEl);
+    modal.show();
+}
+
+
+

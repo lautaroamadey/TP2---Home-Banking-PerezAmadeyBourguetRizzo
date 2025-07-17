@@ -279,8 +279,8 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="button" class="btn btn-success" onclick="comprarDolares()">Comprar</button>
-                    <button type="button" class="btn btn-primary" onclick="venderDolares()">Vender</button>
+                    <button type="button" class="btn btn-success" onclick="operarDolares('compra')">Comprar</button>
+                    <button type="button" class="btn btn-primary" onclick="operarDolares('venta')">Vender</button>
                 </div>
             </form>
         </section>
@@ -293,7 +293,7 @@
             <!-- Selector de tarjeta -->
             <div class="mb-3">
                 <label for="creditCardSelect" class="form-label">Seleccionar tarjeta</label>
-                <select id="creditCardSelect" class="form-select">
+                <select id="creditCardSelect" class="form-select" onchange="rellenarTarjetaCredito()">
                     <!-- Opciones a generar dinámicamente -->
                 </select>
             </div>
@@ -338,15 +338,20 @@
                 <div class="card-body">
                     <h5 class="card-title">Pagar tarjeta</h5>
                     <div class="mb-3">
-                        <button class="btn btn-outline-primary me-2" id="payMinimumBtn">Pago mínimo</button>
-                        <button class="btn btn-outline-success me-2" id="payTotalBtn">Pago total</button>
+                        <button class="btn btn-outline-primary me-2" id="payMinimumBtn" onclick="pagoMinimo()">Pago mínimo</button>
+                        <button class="btn btn-outline-success me-2" id="payTotalBtn" onclick="pagoTotal()">Pago total</button>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">$</span>
                         <input type="number" class="form-control" id="customPaymentAmount" placeholder="Monto">
-                        <button class="btn btn-outline-secondary" id="payCustomBtn">Pagar</button>
+                        <button class="btn btn-outline-secondary" id="payCustomBtn" onclick="pagarSaldo()">Pagar</button>
                     </div>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" onclick="verMovimientosTarjetaCredito()">Ver movimientos</button>
+
             </div>
 
         </section>

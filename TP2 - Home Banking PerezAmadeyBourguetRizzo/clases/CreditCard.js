@@ -22,7 +22,7 @@ class CreditCard {
 
         this.consumptions = [];
 
-        this.balance = 0;
+        this.balance = 10000;
 
         // Esto no es la realidad, es por simplificar
         // Si el cliente usa el pago mínimo o paga menos del total
