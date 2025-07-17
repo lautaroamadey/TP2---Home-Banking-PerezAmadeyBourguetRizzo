@@ -473,16 +473,23 @@ function mostrarCreditCards() {
     // Paso 2: Limpiamos el select antes de llenarlo
     document.getElementById("creditCardSelect").innerHTML = "";
 
-    // Paso 3: Recorremos cada tarjeta y llamamos a la función para renderizarla
+    // Paso 3: Recorremos cada tarjeta y agregamos la opción al select
     for (let i = 0; i < creditCards.length; i++) {
+        let id = creditCards[i].id;
         let provider = creditCards[i].provider;
         let displayedName = creditCards[i].displayedName;
-        let id = creditCards[i].id;
 
-        creditCardOption(id, provider, displayedName);
+        document.getElementById("creditCardSelect").innerHTML += `
+            <option value="${id}">${provider} - ${displayedName}</option>
+        `;
+    }
+
+    // Paso 4: Seleccionamos la primera tarjeta por defecto y mostramos sus datos
+    if (creditCards.length > 0) {
+        document.getElementById("creditCardSelect").value = creditCards[0].id;
+        rellenarTarjetaCredito();
     }
 }
-
 
 //27 f.
 function mostrarTarjetasCredito() {
@@ -701,8 +708,6 @@ function operarDolares(tipo) {
 
 
 //32
-
-
 function rellenarTarjetaCredito() {
     let creditCards = findCreditCards(idLogued)
     let id = document.getElementById("creditCardSelect").value
@@ -771,41 +776,54 @@ function pagoTotal() {
 }
 
 function pagarSaldo() {
-    let idcreditCard = document.getElementById("creditCardSelect").value
-    let creditCard = findCreditCardById(idcreditCard)
-    let savingbanks = encontrarSavingBank(idLogued)
-    let monto = Number(document.getElementById("customPaymentAmount").value)
+    let idcreditCard = document.getElementById("creditCardSelect").value;
+    let creditCard = findCreditCardById(idcreditCard);
+    let savingbanks = encontrarSavingBank(idLogued);
+    let monto = Number(document.getElementById("customPaymentAmount").value);
+
+    let cuentaOk = false;
+
     for (let i = 0; i < savingbanks.length; i++) {
         if (savingbanks[i].currency == "ARS") {
             if (monto <= savingbanks[i].balance) {
-                savingbanks[i].extraer(monto)
-                document.getElementsByClassName("mb-1")[1].innerHTML = `<strong>Saldo:</strong> $${savingbanks[i].balance}`
+                savingbanks[i].extraer(monto);
+                cuentaOk = true;
+                document.getElementsByClassName("mb-1")[1].innerHTML = `<strong>Saldo:</strong> $${savingbanks[i].balance}`;
+                break;
             } else {
-                alert("Saldo insuficiente")
-                console.log("No se pudo extraer el dinero de la caja de ahorro en pesos")
-                return false
+                showModal("Error", "Saldo insuficiente en la caja de ahorro.");
+                return;
             }
         }
     }
-    let checkPago = creditCard.registrarPago(monto)
-    if (checkPago == 1) {
-        alert("Pago realiado correctamente")
-        console.log("Realizo el pago total o mayor")
-        document.getElementById("creditCardBalance").innerText = `${creditCard.balance}`
-        document.getElementById("customPaymentAmount").value = "";
-        return true
-    } else if (checkPago == 0) {
-        alert("Pago realizado correctamente")
-        console.log("Realizo el pago minimo")
-        document.getElementById("creditCardBalance").innerText = `${creditCard.balance}`
-        return true
-    } else {
-        alert("No se ha podido realizar el pago")
-        console.log("No logro realizar el pago")
-        return false
-    }
-}
 
+    if (!cuentaOk) {
+        showModal("Error", "No se encontró una caja de ahorro en ARS.");
+        return;
+    }
+
+    let checkPago = creditCard.registrarPago(monto);
+
+    if (checkPago === 1) {
+        creditCard.consumptions.push(new Movement("Pago total", -monto, 1));
+    } else if (checkPago === 0) {
+        creditCard.consumptions.push(new Movement("Pago mínimo", -monto, 1));
+    } else if (checkPago === -1) {
+        showModal("Error", "El monto ingresado es menor al pago mínimo.");
+        return;
+    } else {
+        showModal("Error", "No se ha podido realizar el pago.");
+        return;
+    }
+
+    showModal("Éxito", "El pago de la tarjeta fue realizado correctamente.");
+    document.getElementById("creditCardBalance").innerText = `${creditCard.balance}`;
+    document.getElementById("customPaymentAmount").value = "";
+
+    actualizarMisCuentas();
+    rellenarTarjetaCredito();
+    verMovimientosTarjetaCredito();
+}
 
 
 function verMovimientosTarjetaCredito() {
@@ -824,7 +842,6 @@ function verMovimientosTarjetaCredito() {
         return;
     }
 
-    // Construimos la tabla como string HTML
     let tabla = `
         <table class="table">
             <thead>
@@ -832,6 +849,7 @@ function verMovimientosTarjetaCredito() {
                     <th>Fecha</th>
                     <th>Comercio</th>
                     <th>Monto</th>
+                    <th>Cuotas</th>
                 </tr>
             </thead>
             <tbody>
@@ -840,9 +858,10 @@ function verMovimientosTarjetaCredito() {
     movimientos.forEach(mov => {
         tabla += `
             <tr>
-                <td>${mov.fecha}</td>
-                <td>${mov.tercero}</td>
-                <td>$${mov.monto}</td>
+                <td>${new Date(mov.date).toLocaleDateString()}</td>
+                <td>${mov.thirdPartyName}</td>
+                <td>$${mov.amount}</td>
+                <td>${mov.cuotes || "-"}</td>
             </tr>
         `;
     });
@@ -852,52 +871,13 @@ function verMovimientosTarjetaCredito() {
         </table>
     `;
 
-    showModal("Movimientos de la tarjeta", tabla);
+    document.getElementById("modalTitle").textContent = "Movimientos de la tarjeta";
+    document.getElementById("modalBody").innerHTML = tabla;
+
+    let modalEl = document.getElementById("modal");
+    let modal = new bootstrap.Modal(modalEl);
+    modal.show();
 }
 
 
 
-
-function pagarTarjetaCredito() {
-    let tarjetaId = document.getElementById("creditCardSelect").value;
-    let montoInput = document.getElementById("customPaymentAmount");
-    
-    if (!montoInput) {
-        showModal("Error", "No se encontró el campo para ingresar el monto.");
-        return;
-    }
-
-    let monto = parseFloat(montoInput.value);
-    if (isNaN(monto) || monto <= 0) {
-        showModal("Error", "Ingresá un monto válido mayor que cero.");
-        return;
-    }
-
-    let tarjeta = encontrarCreditCard(tarjetaId);
-
-    if (!tarjeta) {
-        showModal("Error", "No se encontró la tarjeta seleccionada.");
-        return;
-    }
-
-    // Suponemos que pagás desde la primera caja de ahorro del cliente logueado
-    let cliente = clients[idLogued];
-    if (!cliente || !cliente.savingsBanks || cliente.savingsBanks.length === 0) {
-        showModal("Error", "No se encontró una cuenta para realizar el pago.");
-        return;
-    }
-
-    let cuenta = cliente.savingsBanks[0];
-
-    if (cuenta.extraer(monto)) {
-        tarjeta.registrarPago(monto);
-        showModal("Éxito", "El pago de la tarjeta fue realizado correctamente.");
-        actualizarMisCuentas();
-        rellenarTarjetaCredito();
-
-        // Limpiar input
-        montoInput.value = "";
-    } else {
-        showModal("Error", "Saldo insuficiente en la cuenta para realizar el pago.");
-    }
-}
