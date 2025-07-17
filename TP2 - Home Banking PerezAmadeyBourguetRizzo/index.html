@@ -15,7 +15,7 @@
     <div>
         <nav class="navbar navbar-dark bg-dark sticky-top">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">TP2 - CarraBank - Home Banking - Alumnos: AMADEY</a>
+                <a class="navbar-brand" href="#">TP2 - CarraBank - Home Banking - Alumnos: AMADEY y BOURGUET</a>
 
                 <!-- Botón menú hamburguesa -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
@@ -228,7 +228,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="button" class="btn btn-primary" onclick="tranferenciasss()" >Realizar transferencia</button>
+                    <button type="button" class="btn btn-primary" onclick="tranferencias()" >Realizar transferencia</button>
                 </div>
             </form>
         </section>
@@ -256,15 +256,6 @@
 
             <form>
                 <div class="mb-3">
-                    <label class="form-label">Operación</label>
-                    <select id="dollarOperation" class="form-select">
-                        <option selected disabled>Seleccione una opción</option>
-                        <option value="compra">Comprar dólares</option>
-                        <option value="venta">Vender dólares</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
                     <label for="pesosAccount" class="form-label">Cuenta en pesos</label>
                     <select id="pesosAccount" class="form-select">
                         <option selected disabled>Seleccionar cuenta...</option>
@@ -288,7 +279,8 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-success">Confirmar operación</button>
+                    <button type="button" class="btn btn-success" onclick="comprarDolares()">Comprar</button>
+                    <button type="button" class="btn btn-primary" onclick="venderDolares()">Vender</button>
                 </div>
             </form>
         </section>

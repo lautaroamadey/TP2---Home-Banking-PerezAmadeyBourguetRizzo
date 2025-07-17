@@ -46,30 +46,6 @@ function encontrarSavingBank(idCaja) {
     return null; // Agregá esto para evitar que devuelva undefined
 }
 
-// Función para realizar una transferencia entre dos cajas por ID
-function realizarTransferencia(id1, id2, monto) {
-    let caja1 = encontrarSavingBank(id1);
-    let caja2 = encontrarSavingBank(id2);
-
-    if (!caja1 || !caja2) {
-        showModal("Error", "No se encontraron las cuentas");
-        return;
-    }
-
-    if (caja1.currency !== caja2.currency) {
-        showModal("Error", "Las cuentas tienen distintas monedas");
-        return;
-    }
-
-    if (caja1.extraer(monto)) {
-        caja2.ingresar(monto);
-        showModal("Éxito", "Has realizado la transferencia");
-        actualizarMisCuentas();        // ✅ actualiza sección "Mis Cuentas"
-        limpiarInputsTransferencia();  // ✅ limpia campos del form (si la definiste)
-    } else {
-        showModal("Error", "No se ha podido realizar");
-    }
-}
 
 
 //11
@@ -168,15 +144,30 @@ function findMovementsByCreditCardId(creditCardId) {
 
 //23
 function realizarTransferencia(id1, id2, monto) {
-    let caja1 = encontrarSavingBank(id1)
-    let caja2 = encontrarSavingBank(id2)
-    if (caja1.extraer(monto)) {
-        caja2.ingresar(monto)
-        showModal("Exito", "Has realizado la transferencia")
+    let caja1 = encontrarSavingBank(id1);
+    let caja2 = encontrarSavingBank(id2);
+
+    if (!caja1 || !caja2) {
+        showModal("Error", "No se encontraron las cuentas");
+        return false;
+    }
+
+    if (caja1.currency !== caja2.currency) {
+        showModal("Error", "Las cuentas tienen distintas monedas");
+        return false;
+    }
+
+    if (caja1.extraer(Number(monto))) { // asegurate que monto sea número
+        caja2.ingresar(Number(monto));
+        showModal("Éxito", "Has realizado la transferencia");
+        actualizarMisCuentas();
+        return true;
     } else {
-        showModal("Error", "No se ha podido realizar")
+        showModal("Error", "No se ha podido realizar");
+        return false;
     }
 }
+
 
 // 24
 function checklogin(dni, password) {
@@ -313,7 +304,6 @@ function register() {
 
 //27 a.
 function llenarTarjetaSavingBank() {
-
     // Paso 1: Accedemos al cliente logueado restando 1 porque los arrays comienzan en 0
     // y tomamos su array de cajas de ahorro (savingsBanks)
     let savings = clients[findClient(idLogued)].savingsBanks;
@@ -338,7 +328,6 @@ function llenarTarjetaSavingBank() {
 }
 
 function llenarCajaDolares() {
-
     // Paso 1: Accedemos al cliente logueado (restamos 1 porque los arrays comienzan en 0)
     // y tomamos su array de cajas de ahorro (savingsBanks)
     let saving = clients[findClient(idLogued)].savingsBanks;
@@ -362,9 +351,9 @@ function llenarCajaDolares() {
 }
 
 function actualizarMisCuentas() {
-    document.getElementById("misCuentas").innerHTML = ""; // Limpiar lo anterior
-    llenarTarjetaSavingBank(); // Recarga cajas en pesos
-    llenarCajaDolares();       // Recarga cajas en dólares
+    document.getElementById("misCuentas").innerHTML = "";  // ✅ Limpia antes de rellenar
+    llenarTarjetaSavingBank();
+    llenarCajaDolares();
 }
 
 
@@ -568,7 +557,6 @@ document.getElementById("toggleDebitCvv").addEventListener("click", function () 
 
 
 
-// (Mantener la función realizarTransferencia tal como está, es compatible)
 
 //30
 function tranferenciaAlias() {
@@ -610,7 +598,6 @@ function tranferenciaAlias() {
         cajaDestino.ingresar(monto);
         showModal("Éxito", "La transferencia fue realizada correctamente");
         actualizarMisCuentas(); // actualiza las tarjetas visibles
-        limpiarInputsTransferencia(); // si creás esta función
     } else {
         showModal("Error", "No hay suficiente saldo");
     }
@@ -634,18 +621,17 @@ function tranferenciasss() {
     
 }*/
 
-function tranferenciasss() {
+function tranferencias() {
     let idOrigen = document.getElementById("transferOrigin").value;
     let aliasDestino = document.getElementById("transferDestiny").value;
     let idDestino = document.getElementById("transferDestinysSelect").value;
     let monto = document.getElementById("transferAmount").value;
 
     if (aliasDestino !== "") {
-        tranferenciaAlias(); // ✅ Usa alias
+        tranferenciaAlias(); 
     } else {
-        let exito = realizarTransferencia(idOrigen, idDestino, monto); // ✅ Usa ID
+        let exito = realizarTransferencia(idOrigen, idDestino, monto); 
         if (exito) {
-            // Limpiar campos
             document.getElementById("transferOrigin").value = "nada";
             document.getElementById("transferDestiny").value = "";
             document.getElementById("transferDestinysSelect").value = "nada";
@@ -655,3 +641,21 @@ function tranferenciasss() {
         }
     }
 }
+
+
+window.addEventListener("DOMContentLoaded", () => {
+    mostrarSelectDolares();
+});
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    let operacion = document.getElementById("dollarOperation").value;
+    if (operacion === "compra") {
+        comprarDolares();
+    } else if (operacion === "venta") {
+        venderDolares();
+    } else {
+        showModal("Error", "Seleccioná una operación válida");
+    }
+});
